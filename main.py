@@ -11,7 +11,7 @@ app.secret_key = 'clave_secreta_flask'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'proyectoflask'
+app.config['MYSQL_DB'] = 'tfm'
 
 mysql = MySQL(app)
 
