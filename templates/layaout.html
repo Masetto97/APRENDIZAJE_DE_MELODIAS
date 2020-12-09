@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <title>{% block title %} | FLASK {% endblock %} | EJEMPLO DEL SISTEMA</title>
+        <link rel='stylesheet' href="{{url_for ('static', filename='css/styles.css')}}">
+    </head>
+
+
+    <body>
+
+        <!-- cabecera de la pagina-->
+        <header>
+            <div id="logotipo">
+                <h1>TFM EDUARDO MORA GONZALEZ</h1>
+            </div>
+        </header> 
+
+        <nav>
+            <ul>
+                <li>
+                    <a href="/">INICIO</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="barra">
+            <span class="esquina-izquierda"></span>
+            <span class="relleno-barra"></span>
+            <span class="esquina-derecha"></span>
+        </div>
+        
+        <div id="content">
+
+            <div class="box">
+                {% block content %}
+                    <strong>CONTENIDO DEL BLOQUE ORIGINAL</strong>
+                {% endblock %}
+            </div>
+
+        </div>
+
+        <footer>
+            EDUARDO MORA GONZALEZ |  {{now.month}}/{{now.year}}
+        </footer>
+        
+    </body>
+</html>
+
+
+
+
+
