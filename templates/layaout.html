@@ -12,6 +12,7 @@
         <!-- cabecera de la pagina-->
         <header>
             <div id="logotipo">
+                <img src="{{url_for ('static', filename='img/logo.png')}}" />
                 <h1>TFM EDUARDO MORA GONZALEZ</h1>
             </div>
         </header> 
@@ -20,6 +21,15 @@
             <ul>
                 <li>
                     <a href="/">INICIO</a>
+                </li>
+                <li>
+                    <a href="/">CARGAR ARCHIVO</a>
+                </li>
+                <li>
+                    <a href="/">BIBLIOTECA</a>
+                </li>
+                <li>
+                    <a href="/">AJUSTES</a>
                 </li>
             </ul>
         </nav>
@@ -40,7 +50,7 @@
         </div>
 
         <footer>
-            EDUARDO MORA GONZALEZ |  {{now.month}}/{{now.year}}
+            EDUARDO MORA GONZÁLEZ | {{now.day}}/{{now.month}}/{{now.year}}
         </footer>
         
     </body>

@@ -1,0 +1,31 @@
+{% extends 'layaout.html' %}
+
+    {% block title %}
+        INICIO
+    {% endblock %}
+
+
+    {% block content %}
+
+        <h1 class="title"> PÁGINA DE INICIO </h1>
+       
+
+        {% with messages = get_flashed_messages()  %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message alert-success">
+                        {{message}}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}            
+
+        {# 
+            ESTO ES UN COMENTARIO 
+            {{dato1}}
+            {{dato2}}
+            {{lista}}
+
+        #}
+
+    {% endblock %}
