@@ -29,7 +29,17 @@ def date_now():
 def main():
       return render_template('index.html')
 
+@app.route("/ajustes")
+def ajustes():
+                return render_template('ajustes.html') 
 
+@app.route("/biblioteca")
+def biblioteca():
+                return render_template('biblioteca.html') 
+
+@app.route("/cargar")
+def cargar():
+                return render_template('cargar.html') 
 
 if __name__ == "__main__":
        app.run(debug=True)   
