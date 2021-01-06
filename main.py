@@ -1,6 +1,6 @@
 from flask import Flask, flash, redirect, url_for, render_template, request
 from datetime import datetime
-from flask_mysqldb import MySQL
+#from flask_mysqldb import MySQL
 
 app = Flask(__name__)
 
@@ -8,12 +8,12 @@ app.secret_key = 'clave_secreta_flask'
 
 # Conexion DB
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'tfm'
+#app.config['MYSQL_HOST'] = 'localhost'
+#app.config['MYSQL_USER'] = 'root'
+#app.config['MYSQL_PASSWORD'] = 'root'
+#app.config['MYSQL_DB'] = 'tfm'
 
-mysql = MySQL(app)
+#mysql = MySQL(app)
 
 # context processors
 
@@ -32,4 +32,4 @@ def main():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)   
+       app.run(debug=True)   
