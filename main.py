@@ -1,6 +1,6 @@
 from flask import Flask, flash, redirect, url_for, render_template, request
 from datetime import datetime
-import mariadb
+import mysql.connector as mariadb
 import json
 
 app = Flask(__name__)
