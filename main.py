@@ -1,6 +1,6 @@
 from flask import Flask, flash, redirect, url_for, render_template, request
 from datetime import datetime
-import mysql.connector as mariadb
+import mariadb
 import json
 
 app = Flask(__name__)
@@ -51,7 +51,7 @@ def cargar():
                 return render_template('cargar.html') 
 
 
-@app.route('/api/people', methods=['GET'])
+@app.route('/bbdd', methods=['GET'])
 def index():
    # connection for MariaDB
    conn = mariadb.connect(**config)
