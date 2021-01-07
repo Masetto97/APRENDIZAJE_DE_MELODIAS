@@ -5,6 +5,28 @@
     {% endblock %}
     {% block content %}
 
-    AQUI SE CARGAN LOS ARCHIVOS
+    <h1 class="title"> INTRODUZCA LOS DATOS DE LA CANCIÓN QUE VA A PROCESAR </h1>
+    <br><br>
+
+    <form action="" method="POST">
+
+        <label for="titulo">TITULO</label>
+        <input type="text" name="titulo"/>
+        <br><br>
+        <label for="estilo">ESTILO</label>
+        <select name="estilo">
+
+            <option>CLASICO</option>
+            
+            <option>POP</option>
+            
+        </select>
+        <br><br>
+        <label for="ruta">RUTA</label>
+        <input type="file" name="ruta"/>
+        <br><br>
+        <input type="submit" value="GUARDAR"/>
+        
+    </form>
 
     {% endblock %}
