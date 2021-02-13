@@ -1,28 +1,18 @@
 from flask import Flask, flash, redirect, url_for, render_template, request
 from datetime import datetime
-import mariadb
 import json
+import mariadb
 
 app = Flask(__name__)
 
 app.secret_key = 'clave_secreta_flask'
 
-# Conexion DB
-
-#app.config['MYSQL_HOST'] = 'localhost'
-#app.config['MYSQL_USER'] = 'root'
-#app.config['MYSQL_PASSWORD'] = 'root'
-#app.config['MYSQL_DB'] = 'tfm'
-
-#mysql = MySQL(app)
-
-# context processors
-
+# configuration used to connect to MariaDB
 config = {
-    'host': '127.0.0.1',
+    'host': '10.168.168.34',
     'port': 3306,
     'user': 'root',
-    'password': 'root',
+    'password': 'Password123!',
     'database': 'TFM'
 }
 
@@ -51,14 +41,15 @@ def cargar():
                 return render_template('cargar.html') 
 
 
-@app.route('/bbdd', methods=['GET'])
+# route to return all people
+@app.route('/api/people', methods=['GET'])
 def index():
    # connection for MariaDB
    conn = mariadb.connect(**config)
    # create a connection cursor
    cur = conn.cursor()
    # execute a SQL statement
-   cur.execute("select * from USUARIOS")
+   cur.execute("select * from people")
 
    # serialize results into JSON
    row_headers=[x[0] for x in cur.description]
