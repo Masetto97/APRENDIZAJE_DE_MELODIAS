@@ -14,7 +14,8 @@ config = {
     'user': 'root',
     'password': 'Password123!',
     'database': 'TFM'
-}
+} 
+
 
 @app.context_processor
 def date_now():
