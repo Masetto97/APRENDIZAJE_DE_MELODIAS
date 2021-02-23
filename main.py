@@ -1,4 +1,4 @@
-from flask import Flask, flash, redirect, url_for, render_template, request
+from flask import Flask, flash, redirect, url_for, render_template, request, session
 from datetime import datetime
 import json
 import mariadb
@@ -25,8 +25,38 @@ def date_now():
 
 # Endpoints
 
-@app.route("/")
-def main():
+@app.route('/', methods=['GET', 'POST'])
+def login():
+     # Output message if something goes wrong...
+    msg = ''
+    # Check if "username" and "password" POST requests exist (user submitted form)
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+        # Create variables for easy access
+        username = request.form['username']
+        password = request.form['password']
+        
+        # connection for MariaDB
+        conn = mariadb.connect(**config)
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM accounts WHERE username = %s AND password = %s', (username, password,))
+        # Fetch one record and return result
+        account = cursor.fetchone()
+        # If account exists in accounts table in out database
+        if account:
+            # Create session data, we can access this data in other routes
+            session['loggedin'] = True
+            session['id'] = account['id']
+            session['username'] = account['username']
+            # Redirect to home page
+            return redirect(url_for('index'))
+        else:
+            # Account doesnt exist or username/password incorrect
+            msg = 'Incorrect username/password!'
+    # Show the login form with message (if any)
+    return render_template('login.html', msg=msg)
+
+@app.route("/index")
+def index():
       return render_template('index.html')
 
 @app.route("/ajustes")
@@ -41,28 +71,14 @@ def biblioteca():
 def cargar():
                 return render_template('cargar.html') 
 
-
-# route to return all people
-@app.route('/api/people', methods=['GET'])
-def index():
-   # connection for MariaDB
-   conn = mariadb.connect(**config)
-   # create a connection cursor
-   cur = conn.cursor()
-   # execute a SQL statement
-   cur.execute("select * from people")
-
-   # serialize results into JSON
-   row_headers=[x[0] for x in cur.description]
-   rv = cur.fetchall()
-   json_data=[]
-   for result in rv:
-        json_data.append(dict(zip(row_headers,result)))
-
-   # return the results!
-   return json.dumps(json_data)
-
-
+@app.route('/logout')
+def logout():
+    # Remove session data, this will log the user out
+   session.pop('loggedin', None)
+   session.pop('id', None)
+   session.pop('username', None)
+   # Redirect to login page
+   return redirect(url_for('/'))
 
 if __name__ == "__main__":
        app.run(debug=True)   
