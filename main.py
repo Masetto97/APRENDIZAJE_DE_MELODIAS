@@ -43,6 +43,9 @@ def login():
         account = cursor.fetchone()
         # If account exists in accounts table in out database
         if account:
+            # Create session data, we can access this data in other routes
+            session['loggedin'] = True
+            session['username'] = account['username']
             return redirect(url_for('index'))
         else:
             # Account doesnt exist or username/password incorrect
