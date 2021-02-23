@@ -70,7 +70,7 @@ def registro():
          # Check if account exists using MySQL
         conn = mariadb.connect(**config)
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM accounts WHERE username = %s', (username,))
+        cursor.execute('SELECT * FROM USUARIO WHERE Usuario = %s', (username,))
         account = cursor.fetchone()
         # If account exists show error and validation checks
         if account:
