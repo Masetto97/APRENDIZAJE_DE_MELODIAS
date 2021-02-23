@@ -9,7 +9,7 @@ app.secret_key = 'clave_secreta_flask'
 
 # configuration used to connect to MariaDB
 config = {
-    'host': '10.168.168.34',
+    'host': '172.17.0.2',
     'port': 3306,
     'user': 'root',
     'password': 'Password123!',
@@ -38,20 +38,15 @@ def login():
         # connection for MariaDB
         conn = mariadb.connect(**config)
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM accounts WHERE username = %s AND password = %s', (username, password,))
+        cursor.execute('SELECT * FROM USUARIO WHERE Usuario = %s AND Password = %s', (username, password,))
         # Fetch one record and return result
         account = cursor.fetchone()
         # If account exists in accounts table in out database
         if account:
-            # Create session data, we can access this data in other routes
-            session['loggedin'] = True
-            session['id'] = account['id']
-            session['username'] = account['username']
-            # Redirect to home page
             return redirect(url_for('index'))
         else:
             # Account doesnt exist or username/password incorrect
-            msg = 'Incorrect username/password!'
+            msg = 'Login incorrecto'
     # Show the login form with message (if any)
     return render_template('login.html', msg=msg)
 
