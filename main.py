@@ -93,8 +93,9 @@ def registro():
     # Show registration form with message (if any)
     return render_template('registro.html', msg=msg)
 
-
-
+@app.route("/subir")
+def subir():
+    return render_template('subir.html') 
 
 @app.route("/index")
 def index():
@@ -114,12 +115,7 @@ def cargar():
 
 @app.route('/logout')
 def logout():
-    # Remove session data, this will log the user out
-   session.pop('loggedin', None)
-   session.pop('id', None)
-   session.pop('username', None)
-   # Redirect to login page
-   return redirect(url_for('/'))
+   return redirect('/')
 
 if __name__ == "__main__":
        app.run(debug=True)   
