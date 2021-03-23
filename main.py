@@ -3,6 +3,7 @@ from datetime import datetime
 import json
 import mariadb
 import re
+import socket
 
 app = Flask(__name__)
 
@@ -99,7 +100,18 @@ def subir():
 
 @app.route("/index")
 def index():
-      return render_template('index.html')
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        port = 5000 # Puerto de comunicacion
+        # Realizamos la conexion al la IP y puerto
+        sock.connect(('ia',port))
+        # Leemos los datos del servidor
+        data = sock.recv(4096)
+        # Cerramos el socket
+        sock.close()
+        # Mostramos los datos recibidos
+        print(data.decode())
+
+        return render_template('index.html', data=data)
 
 @app.route("/ajustes")
 def ajustes():
