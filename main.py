@@ -10,7 +10,7 @@ app.secret_key = 'clave_secreta_flask'
 
 # configuration used to connect to MariaDB
 config = {
-    'host': '172.17.0.2',
+    'host': 'mariadb',
     'port': 3306,
     'user': 'root',
     'password': 'Password123!',
