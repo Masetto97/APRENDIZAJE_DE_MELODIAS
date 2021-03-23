@@ -12,8 +12,8 @@ app.secret_key = 'clave_secreta_flask'
 config = {
     'host': 'mariadb',
     'port': 3306,
-    'user': 'root',
-    'password': 'Password123!',
+    'user': 'user',
+    'password': 'password',
     'database': 'TFM'
 } 
 
