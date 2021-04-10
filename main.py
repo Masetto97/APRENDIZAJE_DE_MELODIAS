@@ -107,12 +107,10 @@ def index():
         # Create an instance of ProcessData() to send to server.
         variable = 'HOLA SOY EDU'
         # Pickle the object and send it to the server
-        data_string = pickle.dumps(variable)
+        data_string = pickle.dumps(variable, protocol=2)
         sock.send(data_string)
         # Cerramos el socket
         sock.close()
-        # Mostramos los datos recibidos
-        print(data.decode())
 
         return render_template('index.html', data=data_string)
 
