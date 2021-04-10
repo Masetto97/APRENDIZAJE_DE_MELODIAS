@@ -3,7 +3,7 @@ from datetime import datetime
 import json
 import mariadb
 import re
-import socket
+import socket, pickle
 
 app = Flask(__name__)
 
