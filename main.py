@@ -114,7 +114,7 @@ def index():
         # Mostramos los datos recibidos
         print(data.decode())
 
-        return render_template('index.html', data=data)
+        return render_template('index.html', data=data_string)
 
 @app.route("/ajustes")
 def ajustes():
