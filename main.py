@@ -108,7 +108,7 @@ def index():
         variable = 'HOLA SOY EDU'
         # Pickle the object and send it to the server
         data_string = pickle.dumps(variable)
-        s.send(data_string)
+        sock.send(data_string)
         # Cerramos el socket
         sock.close()
         # Mostramos los datos recibidos
