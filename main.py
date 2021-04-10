@@ -104,8 +104,11 @@ def index():
         port = 5000 # Puerto de comunicacion
         # Realizamos la conexion al la IP y puerto
         sock.connect(('ia',port))
-        # Leemos los datos del servidor
-        data = sock.recv(4096)
+        # Create an instance of ProcessData() to send to server.
+        variable = 'HOLA SOY EDU'
+        # Pickle the object and send it to the server
+        data_string = pickle.dumps(variable)
+        s.send(data_string)
         # Cerramos el socket
         sock.close()
         # Mostramos los datos recibidos
