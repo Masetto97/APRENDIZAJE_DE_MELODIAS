@@ -16,8 +16,9 @@ config = {
     'user': 'user',
     'password': 'password',
     'database': 'TFM'
-} 
+}
 
+ID_USUARIO_ACTUAL = 1
 
 @app.context_processor
 def date_now():
@@ -40,7 +41,7 @@ def login():
         # connection for MariaDB
         conn = mariadb.connect(**config)
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM USUARIO WHERE Usuario = %s AND Password = %s', (username, password,))
+        cursor.execute('SELECT * FROM USUARIO WHERE Usuario = %s AND Password = %s', (username, password))
         # Fetch one record and return result
         account = cursor.fetchone()
         # If account exists in accounts table in out database
@@ -75,44 +76,74 @@ def registro():
         account = cursor.fetchone()
         # If account exists show error and validation checks
         if account:
-            msg = 'Account already exists!'
+            msg = 'El usuario ya existe!'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            msg = 'Invalid email address!'
+            msg = 'Direcion de correo invalida!'
         elif not re.match(r'[A-Za-z0-9]+', username):
-            msg = 'Username must contain only characters and numbers!'
+            msg = 'El nombre de usuario debe contener solo caracteres y números!'
         elif not username or not password or not email:
-            msg = 'Please fill out the form!'
+            msg = 'Por favor rellena el formulario!'
         else:
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
-            cursor.execute('INSERT INTO USUARIO VALUES (NULL, %s, %s, %s, %s)', (name, username, password, email,))
+            cursor.execute('INSERT INTO USUARIO VALUES (NULL, %s, %s, %s, %s)', (name, username, password, email))
             conn.commit()
             msg = 'You have successfully registered!'
     
     elif request.method == 'POST':
         # Form is empty... (no POST data)
-        msg = 'Please fill out the form!'
+        msg = 'Por favor rellena el formulario!'
     # Show registration form with message (if any)
     return render_template('registro.html', msg=msg)
 
-@app.route("/subir")
+
+@app.route("/subir", methods=['GET', 'POST'])
 def subir():
-    return render_template('subir.html') 
+    # Output message if something goes wrong...
+    msg = ''
+    # Check if "username", "password" and "email" POST requests exist (user submitted form)
+    if request.method == 'POST' and 'titulo' in request.form and 'estilo' in request.form and 'ruta' in request.form:
+        # Create variables for easy access
+        titulo = request.form['titulo']
+        estilo = request.form['estilo']
+        ruta = request.form['ruta']
+
+         # Check if account exists using MySQL
+        conn = mariadb.connect(**config)
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM CANCION WHERE Titulo = %s', (titulo,))
+        account = cursor.fetchone()
+        # If account exists show error and validation checks
+        if account:
+            msg = 'La cancion ya fue registrada!'
+        elif not re.match(r'[A-Za-z0-9]+', titulo):
+            msg = 'El titulo solo debe contener letras y numeros!'
+        elif not titulo or not estilo or not ruta:
+            msg = 'Por favor rellena el formulario!'
+        else:
+            # Account doesnt exists and the form data is valid, now insert new account into accounts table
+            cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s, %s)', (titulo, datetime.now(), 'N', estilo, ID_USUARIO_ACTUAL))
+            conn.commit()
+            cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (titulo, ruta, ID_USUARIO_ACTUAL))
+            msg = 'Registro Exitoso!'
+    
+    elif request.method == 'POST':
+        # Form is empty... (no POST data)
+        msg = 'Por favor rellena el formulario!'
+        
+    # Show registration form with message (if any)
+    return render_template('subir.html', msg=msg) 
+
+
+
+
+
+
+
+
 
 @app.route("/index")
 def index():
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        port = 5000 # Puerto de comunicacion
-        # Realizamos la conexion al la IP y puerto
-        sock.connect(('ia',port))
-        # Create an instance of ProcessData() to send to server.
-        variable = 'HOLA SOY EDU'
-        # Pickle the object and send it to the server
-        data_string = pickle.dumps(variable, protocol=2)
-        sock.send(data_string)
-        # Cerramos el socket
-        sock.close()
-
-        return render_template('index.html', data=data_string)
+    return render_template('index.html')
 
 @app.route("/ajustes")
 def ajustes():
@@ -124,7 +155,10 @@ def biblioteca():
 
 @app.route("/cargar")
 def cargar():
-                return render_template('cargar.html') 
+    
+    
+    
+    return render_template('cargar.html') 
 
 @app.route('/logout')
 def logout():
