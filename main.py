@@ -118,6 +118,7 @@ def biblioteca():
     print("Done Sending.")
     print(s.recv(1024))
     s.close()
+    
     return render_template('biblioteca.html') 
 
 
