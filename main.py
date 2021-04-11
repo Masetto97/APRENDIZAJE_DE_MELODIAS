@@ -117,7 +117,7 @@ def subir():
             msg = 'La cancion ya fue registrada!'
         elif not re.match(r'[A-Za-z0-9]+', titulo):
             msg = 'El titulo solo debe contener letras y numeros!'
-        elif not titulo or not estilo or not ruta:
+        elif not titulo or not ruta:
             msg = 'Por favor rellena el formulario!'
         else:
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
