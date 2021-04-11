@@ -47,7 +47,7 @@ def login():
         account = cursor.fetchone()
         # If account exists in accounts table in out database
         if account:
-            ID_USUARIO_ACTUAL = account[1]
+            ID_USUARIO_ACTUAL = account
             return redirect(url_for('index'))
         else:
             # Account doesnt exist or username/password incorrect
