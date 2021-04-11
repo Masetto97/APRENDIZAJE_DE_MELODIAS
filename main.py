@@ -107,7 +107,7 @@ def index():
 def biblioteca():
     s = socket.socket()
     s.connect(('ia', 5000))
-    filetosend = open("./entrada.mp3", "rb")
+    filetosend = open("./entrada.mp3", "r")
     aux = filetosend.read(1024)
     while aux:
         print("Sending...")
@@ -118,7 +118,7 @@ def biblioteca():
     print("Done Sending.")
     print(s.recv(1024))
     s.close()
-    
+
     return render_template('biblioteca.html') 
 
 
