@@ -142,13 +142,8 @@ def subir():
             # Metemos la ruta en la BBDD
             cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (titulo, ruta, song[0]))
             conn.commit()
-            
-            msg = 'Registro Exitoso!'
-    
-    elif request.method == 'POST':
-        # Form is empty... (no POST data)
-        msg = 'Por favor rellena el formulario!'
 
+            msg = 'Registro Exitoso!'
     # Show registration form with message (if any)
     return render_template('subir.html', msg=msg) 
 
