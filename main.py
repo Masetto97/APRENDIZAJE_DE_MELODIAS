@@ -145,7 +145,24 @@ def ajustes():
 
 @app.route("/biblioteca")
 def biblioteca():
-                return render_template('biblioteca.html') 
+    s = socket.socket()
+    s.connect(('ia', 5000))
+    filetosend = open("./home/mobaxterm/Desktop/entrada.mp3", "rb")
+    aux = filetosend.read(1024)
+    #data = pickle.dumps(aux)
+    while aux:
+        print("Sending...")
+        s.send(aux)
+        aux = filetosend.read(1024)
+        #data = pickle.dumps(aux)
+
+    filetosend.close()
+    s.send('fin')
+    print("Done Sending.")
+    print(s.recv(1024))
+    s.close()
+
+    return render_template('biblioteca.html') 
 
 @app.route("/cargar")
 def cargar():

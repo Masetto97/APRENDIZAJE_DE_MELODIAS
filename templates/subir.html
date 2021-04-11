@@ -29,9 +29,12 @@
             </label>
             <input type="file" name="RUTA" placeholder="Ruta" id="Ruta" required>
             <br> <br>
-			<input type="submit" value="SUBIR">
+
 			<div class="msg">{{ msg }}</div>
+			<input type="submit" value="SUBIR">
 			<input type="submit" onclick="{{ url_for('subir') }}" value="VOLVER">
+
+
 		</form>
 		</div>
 	</body>
