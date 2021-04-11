@@ -18,13 +18,14 @@ config = {
     'database': 'TFM'
 }
 
-ID_USUARIO_ACTUAL = 1
-
 @app.context_processor
 def date_now():
     return {
         'now': datetime.utcnow()
     }
+
+#Usuario Actual
+ID_USUARIO_ACTUAL = 0
 
 # Endpoints
 
@@ -41,14 +42,12 @@ def login():
         # connection for MariaDB
         conn = mariadb.connect(**config)
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM USUARIO WHERE Usuario = %s AND Password = %s', (username, password))
+        cursor.execute('SELECT ID FROM USUARIO WHERE Usuario = %s AND Password = %s', (username, password))
         # Fetch one record and return result
         account = cursor.fetchone()
         # If account exists in accounts table in out database
         if account:
-            # Create session data, we can access this data in other routes
-            session['loggedin'] = True
-            session['username'] = username
+            ID_USUARIO_ACTUAL =  int (account[1])
             return redirect(url_for('index'))
         else:
             # Account doesnt exist or username/password incorrect
@@ -137,39 +136,13 @@ def subir():
 
 @app.route("/index")
 def index():
-    return render_template('index.html')
+    return render_template('index.html', msg=ID_USUARIO_ACTUAL)
 
-@app.route("/ajustes")
-def ajustes():
-                return render_template('ajustes.html') 
 
 @app.route("/biblioteca")
 def biblioteca():
-    s = socket.socket()
-    s.connect(('ia', 5000))
-    filetosend = open("./Users/HP Pavilion/Desktop/entrada.mp3", "rb")
-    aux = filetosend.read(1024)
-    #data = pickle.dumps(aux)
-    while aux:
-        print("Sending...")
-        s.send(aux)
-        aux = filetosend.read(1024)
-        #data = pickle.dumps(aux)
-
-    filetosend.close()
-    s.send('fin')
-    print("Done Sending.")
-    print(s.recv(1024))
-    s.close()
-
     return render_template('biblioteca.html') 
 
-@app.route("/cargar")
-def cargar():
-    
-    
-    
-    return render_template('cargar.html') 
 
 @app.route('/logout')
 def logout():
