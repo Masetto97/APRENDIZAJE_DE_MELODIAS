@@ -142,7 +142,7 @@ def index():
 
 @app.route("/biblioteca")
 def biblioteca():
-    return render_template('biblioteca.html', ID_USUARIO_ACTUAL=ID_USUARIO_ACTUAL) 
+    return render_template('biblioteca.html', msg=ID_USUARIO_ACTUAL) 
 
 
 @app.route('/logout')
