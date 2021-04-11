@@ -147,7 +147,7 @@ def ajustes():
 def biblioteca():
     s = socket.socket()
     s.connect(('ia', 5000))
-    filetosend = open("./home/mobaxterm/Desktop/entrada.mp3", "rb")
+    filetosend = open("./Users/HP Pavilion/Desktop/entrada.mp3", "rb")
     aux = filetosend.read(1024)
     #data = pickle.dumps(aux)
     while aux:
