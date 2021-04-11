@@ -101,10 +101,9 @@ def subir():
     # Output message if something goes wrong...
     msg = ''
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
-    if request.method == 'POST' and 'titulo' in request.form and 'estilo' in request.form and 'ruta' in request.form:
+    if request.method == 'POST' and 'titulo' in request.form and 'ruta' in request.form:
         # Create variables for easy access
         titulo = request.form['titulo']
-        estilo = request.form['estilo']
         ruta = request.form['ruta']
 
          # Check if account exists using MySQL
@@ -121,7 +120,7 @@ def subir():
             msg = 'Por favor rellena el formulario!'
         else:
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
-            cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s, %s)', (titulo, datetime.now(), 'N', estilo, ID_USUARIO_ACTUAL))
+            cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s, %s)', (titulo, datetime.now(), 'N', 'clasico', ID_USUARIO_ACTUAL))
             conn.commit()
             cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (titulo, ruta, ID_USUARIO_ACTUAL))
             conn.commit()
