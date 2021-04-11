@@ -15,27 +15,17 @@
 					<i class="fas fa-music"></i>
 				</label>
 				<input type="text" name="TITULO" placeholder="Titulo de la cancion" id="Titulo" required>
-            </br>
-
-            <label for="name">
-                <i class="fas fa-star"></i>
-            </label>
-            <select name="estilo" input="estilo">
-                <option>CLASICO</option>            
-                <option>POP</option>            
-            </select>
-            <label for="name">
-                <i class="fas fa-folder-open"></i>
-            </label>
-            <input type="file" name="RUTA" placeholder="Ruta" id="Ruta" required>
-            <br> <br>
-
-			<div class="msg">{{ msg }}</div>
-			<input type="submit" value="SUBIR">
-			<input type="submit" onclick="{{ url_for('subir') }}" value="VOLVER">
-
-
+				</br>
+				<label for="name">
+					<i class="fas fa-folder-open"></i>
+				</label>
+				<input type="file" name="RUTA" placeholder="Ruta" id="Ruta" required>
+				<div class="msg">{{ msg }}</div>
+				<input type="submit" value="Subir">
 		</form>
+
+		<input type="submit" onclick="{{ url_for('subir') }}" value="VOLVER">
+
 		</div>
 	</body>
 </html>

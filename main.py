@@ -49,6 +49,7 @@ def login():
         if account:
             
             ID_USUARIO_ACTUAL = account[0]
+            print('EL USUARIO ACTUAL ES: ')
             print (ID_USUARIO_ACTUAL)
             return redirect(url_for('index'))
         else:
@@ -97,6 +98,16 @@ def registro():
     return render_template('registro.html', msg=msg)
 
 
+@app.route("/index")
+def index():
+    return render_template('index.html')
+
+
+@app.route("/biblioteca")
+def biblioteca():
+    return render_template('biblioteca.html') 
+
+
 @app.route("/subir", methods=['GET', 'POST'])
 def subir():
     # Output message if something goes wrong...
@@ -120,11 +131,18 @@ def subir():
         elif not titulo or not ruta:
             msg = 'Por favor rellena el formulario!'
         else:
-            # Account doesnt exists and the form data is valid, now insert new account into accounts table
+            # Añadimos la cancion a la BBDD
             cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s, %s)', (titulo, datetime.now(), 'N', 'clasico', ID_USUARIO_ACTUAL))
             conn.commit()
-            cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (titulo, ruta, ID_USUARIO_ACTUAL))
+
+            # Obtenemos el ID de la cancion
+            cursor.execute('SELECT * FROM CANCION WHERE Titulo = %s', (titulo,))
+            song = cursor.fetchone()
+
+            # Metemos la ruta en la BBDD
+            cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (titulo, ruta, song[0]))
             conn.commit()
+            
             msg = 'Registro Exitoso!'
     
     elif request.method == 'POST':
@@ -134,16 +152,6 @@ def subir():
     # Show registration form with message (if any)
     return render_template('subir.html', msg=msg) 
 
-
-
-@app.route("/index")
-def index():
-    return render_template('index.html')
-
-
-@app.route("/biblioteca")
-def biblioteca():
-    return render_template('biblioteca.html') 
 
 
 @app.route('/logout')
