@@ -42,12 +42,12 @@ def login():
         # connection for MariaDB
         conn = mariadb.connect(**config)
         cursor = conn.cursor()
-        cursor.execute('SELECT ID FROM USUARIO WHERE Usuario = %s AND Password = %s', (username, password))
+        cursor.execute('SELECT * FROM USUARIO WHERE Usuario = %s AND Password = %s', (username, password))
         # Fetch one record and return result
         account = cursor.fetchone()
         # If account exists in accounts table in out database
         if account:
-            ID_USUARIO_ACTUAL = account
+            print (account)
             return redirect(url_for('index'))
         else:
             # Account doesnt exist or username/password incorrect
@@ -136,7 +136,7 @@ def subir():
 
 @app.route("/index")
 def index():
-    return render_template('index.html', msg=ID_USUARIO_ACTUAL)
+    return render_template('index.html')
 
 
 @app.route("/biblioteca")
