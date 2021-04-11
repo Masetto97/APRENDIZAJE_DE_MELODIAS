@@ -47,8 +47,9 @@ def login():
         account = cursor.fetchone()
         # If account exists in accounts table in out database
         if account:
-            print (account[0])
+            
             ID_USUARIO_ACTUAL = account[0]
+            print (ID_USUARIO_ACTUAL)
             return redirect(url_for('index'))
         else:
             # Account doesnt exist or username/password incorrect
@@ -142,7 +143,7 @@ def index():
 
 @app.route("/biblioteca")
 def biblioteca():
-    return render_template('biblioteca.html', msg=ID_USUARIO_ACTUAL) 
+    return render_template('biblioteca.html') 
 
 
 @app.route('/logout')
