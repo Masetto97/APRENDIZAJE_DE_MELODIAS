@@ -124,20 +124,15 @@ def subir():
             cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s, %s)', (titulo, datetime.now(), 'N', estilo, ID_USUARIO_ACTUAL))
             conn.commit()
             cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (titulo, ruta, ID_USUARIO_ACTUAL))
+            conn.commit()
             msg = 'Registro Exitoso!'
     
     elif request.method == 'POST':
         # Form is empty... (no POST data)
         msg = 'Por favor rellena el formulario!'
-        
+
     # Show registration form with message (if any)
     return render_template('subir.html', msg=msg) 
-
-
-
-
-
-
 
 
 

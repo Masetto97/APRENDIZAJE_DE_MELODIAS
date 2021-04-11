@@ -9,12 +9,14 @@
 	<body>
 		<div class="register">
 			<h1>SUBIR AL SISTEMA</h1>
-			<form action="{{ url_for('registro') }}" method="post" autocomplete="off">
+
+			<form action="{{ url_for('subir') }}" method="post" autocomplete="off">
 				<label for="name">
 					<i class="fas fa-music"></i>
 				</label>
 				<input type="text" name="TITULO" placeholder="Titulo de la cancion" id="Titulo" required>
             </br>
+
             <label for="name">
                 <i class="fas fa-star"></i>
             </label>
@@ -22,18 +24,14 @@
                 <option>CLASICO</option>            
                 <option>POP</option>            
             </select>
-
-
             <label for="name">
                 <i class="fas fa-folder-open"></i>
             </label>
             <input type="file" name="RUTA" placeholder="Ruta" id="Ruta" required>
             <br> <br>
-            
-
-            
-        <input type="submit" value="SUBIR">
-        <input type="submit" onclick="history.back()" value="VOLVER">
+			<input type="submit" value="SUBIR">
+			<div class="msg">{{ msg }}</div>
+			<input type="submit" onclick="{{ url_for('subir') }}" value="VOLVER">
 		</form>
 		</div>
 	</body>
