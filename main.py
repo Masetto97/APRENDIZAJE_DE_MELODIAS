@@ -105,6 +105,19 @@ def index():
 
 @app.route("/biblioteca")
 def biblioteca():
+    s = socket.socket()
+    s.connect(('ia', 5000))
+    filetosend = open("./entrada.mp3", "rb")
+    aux = filetosend.read(1024)
+    while aux:
+        print("Sending...")
+        s.send(aux)
+        aux = filetosend.read(1024)
+    filetosend.close()
+    s.send('fin')
+    print("Done Sending.")
+    print(s.recv(1024))
+    s.close()
     return render_template('biblioteca.html') 
 
 
