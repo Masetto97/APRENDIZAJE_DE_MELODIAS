@@ -135,12 +135,12 @@ def subir():
     # Output message if something goes wrong...
     msg = ''
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
-    if request.method == 'POST':# and 'titulo' in request.form and 'ruta' in request.form:
+    if request.method == 'POST' and 'ruta' in request.form:# and 'titulo' in request.form and 'ruta' in request.form:
         # Create variables for easy access
         #titulo = request.form['titulo']
         ruta = request.files['ruta']
  
- 
+
         filename = secure_filename(ruta.filename)
         print (os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"]))
         send_from_directory(os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"]),filename,as_attachment=True,)
