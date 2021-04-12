@@ -110,7 +110,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/biblioteca", methods=['POST'])
+@app.route("/biblioteca")
 def biblioteca():
     msg = os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"])
     return render_template('biblioteca.html',msg=msg) 
