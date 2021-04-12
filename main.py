@@ -139,7 +139,8 @@ def subir():
         # Create variables for easy access
         #titulo = request.form['titulo']
         ruta = request.files['ruta']
-
+ 
+ 
         filename = secure_filename(ruta.filename)
         print (os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"]))
         send_from_directory(os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"]),filename,as_attachment=True,)
