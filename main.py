@@ -111,23 +111,18 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/biblioteca")
+@app.route("/biblioteca", methods=['POST'])
 def biblioteca():
-    s = socket.socket()
-    s.connect(('ia', 5000))
-    filetosend = open("./entrada.mp3", "r")
-    aux = filetosend.read(1024)
-    while aux:
-        print("Sending...")
-        s.send(aux)
-        aux = filetosend.read(1024)
-    filetosend.close()
-    s.send('fin')
-    print("Done Sending.")
-    print(s.recv(1024))
-    s.close()
+    if request.method == 'POST':
+        # obtenemos el archivo del input "archivo"
+        f = request.files['archivo']
+        filename = secure_filename(f.filename)
+        # Guardamos el archivo en el directorio "Archivos PDF"
+        f.save(os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"]),filename)
+        # Retornamos una respuesta satisfactoria
+        msg= "<h1>Archivo subido exitosamente</h1>"
 
-    return render_template('biblioteca.html') 
+    return render_template('biblioteca.html',msg=msg) 
 
 
 @app.route("/subir", methods=['GET', 'POST'])
