@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.secret_key = 'clave_secreta_flask'
 
 #Carpeta para subir los archivo antes de guardarlos en la BBDD o procesarlos
-UPLOAD_FOLDER = './Upload' # /ruta/a/la/carpeta
+UPLOAD_FOLDER = 'Upload' # /ruta/a/la/carpeta
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #Usuario Actual
@@ -112,6 +112,23 @@ def index():
 
 @app.route("/biblioteca")
 def biblioteca():
+
+    s = socket.socket()
+    s.connect(('ia', 5000))
+    filetosend = open("/appmf3/APRENDIZAJE_DE_MELODIAS/Upload/entrada.mp3", "rb")
+    aux = filetosend.read(1024)
+    while aux:
+        print("Sending...")
+        s.send(aux)
+        aux = filetosend.read(1024)
+
+    filetosend.close()
+    s.send('fin')
+    print("Done Sending.")
+    print(s.recv(1024))
+    s.shutdown(2)
+    s.close()
+
     msg = os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"])
     return render_template('biblioteca.html',msg=msg) 
 
