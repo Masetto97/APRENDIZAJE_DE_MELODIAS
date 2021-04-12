@@ -143,7 +143,7 @@ def subir():
         filename = secure_filename(ruta.filename)
 
         send_from_directory(os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"]),filename,as_attachment=True,)
-        ruta.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        #ruta.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         
         msg = 'Registro Exitoso!'
     # Show registration form with message (if any)
