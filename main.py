@@ -112,7 +112,8 @@ def index():
 
 @app.route("/biblioteca", methods=['POST'])
 def biblioteca():
-    return render_template('biblioteca.html') 
+    msg = os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"])
+    return render_template('biblioteca.html',msg=msg) 
 
 
 @app.route("/subir", methods=['GET', 'POST'])
@@ -127,7 +128,6 @@ def subir():
  
 
         filename = secure_filename(ruta.filename)
-        print (os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"]))
         send_from_directory(os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"]),filename,as_attachment=True,)
         #ruta.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         
@@ -135,16 +135,6 @@ def subir():
     # Show registration form with message (if any)
     return render_template('subir.html', msg=msg) 
 
-@app.route("/upload", methods=['POST'])
-def uploader():
- if request.method == 'POST':
-  # obtenemos el archivo del input "archivo"
-  f = request.files['archivo']
-  filename = secure_filename(f.filename)
-  # Guardamos el archivo en el directorio "Archivos PDF"
-  f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-  # Retornamos una respuesta satisfactoria
-  return "<h1>Archivo subido exitosamente</h1>"
 
 @app.route('/logout')
 def logout():
