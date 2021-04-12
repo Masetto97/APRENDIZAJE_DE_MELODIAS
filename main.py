@@ -1,13 +1,23 @@
-from flask import Flask, flash, redirect, url_for, render_template, request, session
+from flask import Flask, flash, redirect, url_for, render_template, request, session,  send_from_directory
 from datetime import datetime
+from werkzeug.utils import secure_filename
 import json
 import mariadb
 import re
 import socket, pickle
+import os
 
 app = Flask(__name__)
 
 app.secret_key = 'clave_secreta_flask'
+
+#Carpeta para subir los archivo antes de guardarlos en la BBDD o procesarlos
+UPLOAD_FOLDER = 'Upload' # /ruta/a/la/carpeta
+ALLOWED_EXTENSIONS = set(['txt', 'mid', 'png', 'jpg', 'midi', 'xml'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+#Usuario Actual
+ID_USUARIO_ACTUAL = 0
 
 # configuration used to connect to MariaDB
 config = {
@@ -24,8 +34,6 @@ def date_now():
         'now': datetime.utcnow()
     }
 
-#Usuario Actual
-ID_USUARIO_ACTUAL = 0
 
 # Endpoints
 
@@ -130,34 +138,13 @@ def subir():
     if request.method == 'POST' and 'titulo' in request.form and 'ruta' in request.form:
         # Create variables for easy access
         titulo = request.form['titulo']
-        ruta = request.form['ruta']
+        ruta = request.files['ruta']
 
-         # Check if account exists using MySQL
-        conn = mariadb.connect(**config)
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM CANCION WHERE Titulo = %s', (titulo,))
-        account = cursor.fetchone()
-        # If account exists show error and validation checks
-        if account:
-            msg = 'La cancion ya fue registrada!'
-        elif not re.match(r'[A-Za-z0-9]+', titulo):
-            msg = 'El titulo solo debe contener letras y numeros!'
-        elif not titulo or not ruta:
-            msg = 'Por favor rellena el formulario!'
-        else:
-            # Añadimos la cancion a la BBDD
-            cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s, %s)', (titulo, datetime.now(), 'N', 'clasico', ID_USUARIO_ACTUAL))
-            conn.commit()
+        filename = secure_filename(ruta.filename)
 
-            # Obtenemos el ID de la cancion
-            cursor.execute('SELECT * FROM CANCION WHERE Titulo = %s', (titulo,))
-            song = cursor.fetchone()
-
-            # Metemos la ruta en la BBDD
-            cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (titulo, ruta, song[0]))
-            conn.commit()
-
-            msg = 'Registro Exitoso!'
+        ruta.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        
+        msg = 'Registro Exitoso!'
     # Show registration form with message (if any)
     return render_template('subir.html', msg=msg) 
 
