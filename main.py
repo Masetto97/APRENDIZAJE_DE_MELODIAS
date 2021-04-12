@@ -115,7 +115,7 @@ def biblioteca():
 
     s = socket.socket()
     s.connect(('ia', 5000))
-    filetosend = open("./Upload/prueba.txt", "rb")
+    filetosend = open("./Upload/prueba2.mid", "rb")
     aux = filetosend.read(1024)
     while aux:
         print("Sending...")
