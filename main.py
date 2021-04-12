@@ -123,7 +123,7 @@ def biblioteca():
         aux = filetosend.read(1024)
 
     filetosend.close()
-    s.send('fin')
+    s.send('fin'.encode())
     print("Done Sending.")
     print(s.recv(1024))
     s.shutdown(2)
