@@ -137,7 +137,7 @@ def subir():
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
     if request.method == 'POST':# and 'titulo' in request.form and 'ruta' in request.form:
         # Create variables for easy access
-        titulo = request.form['titulo']
+        #titulo = request.form['titulo']
         ruta = request.files['ruta']
 
         filename = secure_filename(ruta.filename)
