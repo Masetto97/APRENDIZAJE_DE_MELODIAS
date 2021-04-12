@@ -115,7 +115,7 @@ def biblioteca():
 
     s = socket.socket()
     s.connect(('ia', 5000))
-    filetosend = open("/appmf3/APRENDIZAJE_DE_MELODIAS/Upload/entrada.mp3", "rb")
+    filetosend = open("./appmf3/APRENDIZAJE_DE_MELODIAS/Upload/prueba.txt", "rb")
     aux = filetosend.read(1024)
     while aux:
         print("Sending...")
