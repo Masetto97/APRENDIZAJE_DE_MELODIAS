@@ -12,8 +12,7 @@ app = Flask(__name__)
 app.secret_key = 'clave_secreta_flask'
 
 #Carpeta para subir los archivo antes de guardarlos en la BBDD o procesarlos
-UPLOAD_FOLDER = 'Upload' # /ruta/a/la/carpeta
-ALLOWED_EXTENSIONS = set(['txt', 'mid', 'png', 'jpg', 'midi', 'xml'])
+UPLOAD_FOLDER = './Upload' # /ruta/a/la/carpeta
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #Usuario Actual
@@ -113,16 +112,7 @@ def index():
 
 @app.route("/biblioteca", methods=['POST'])
 def biblioteca():
-    if request.method == 'POST' and 'archivo' in request.form:
-        # obtenemos el archivo del input "archivo"
-        f = request.files['archivo']
-        filename = secure_filename(f.filename)
-        # Guardamos el archivo en el directorio "Archivos PDF"
-        f.save(os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"]),filename)
-        # Retornamos una respuesta satisfactoria
-        msg= "<h1>Archivo subido exitosamente</h1>"
-
-    return render_template('biblioteca.html',msg=msg) 
+    return render_template('biblioteca.html') 
 
 
 @app.route("/subir", methods=['GET', 'POST'])
@@ -145,7 +135,16 @@ def subir():
     # Show registration form with message (if any)
     return render_template('subir.html', msg=msg) 
 
-
+@app.route("/upload", methods=['POST'])
+def uploader():
+ if request.method == 'POST':
+  # obtenemos el archivo del input "archivo"
+  f = request.files['archivo']
+  filename = secure_filename(f.filename)
+  # Guardamos el archivo en el directorio "Archivos PDF"
+  f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+  # Retornamos una respuesta satisfactoria
+  return "<h1>Archivo subido exitosamente</h1>"
 
 @app.route('/logout')
 def logout():
