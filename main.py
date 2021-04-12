@@ -113,7 +113,7 @@ def index():
 
 @app.route("/biblioteca", methods=['POST'])
 def biblioteca():
-    if request.method == 'POST':
+    if request.method == 'POST' and 'archivo' in request.form:
         # obtenemos el archivo del input "archivo"
         f = request.files['archivo']
         filename = secure_filename(f.filename)
