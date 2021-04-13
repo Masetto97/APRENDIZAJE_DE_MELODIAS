@@ -118,7 +118,6 @@ def biblioteca():
     filetosend = open("./Upload/prueba2.mid", "rb")
     aux = filetosend.read(1024)
     while aux:
-        print("Sending...")
         s.send(aux)
         aux = filetosend.read(1024)
 
