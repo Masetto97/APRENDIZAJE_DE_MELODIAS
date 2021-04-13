@@ -19,9 +19,13 @@
 				<label for="name">
 					<i class="fas fa-folder-open"></i>
 				</label>
-				<input type="file" name="RUTA" placeholder="RUTA" id="RUTA" required>
-				<div class="msg">{{ msg }}</div>
-				<input type="submit" value="Subir">
+				<form method=post enctype=multipart/form-data>
+					<input type=file name=file>
+					<div class="msg">{{ msg }}</div>
+					<input type=submit value=Upload>
+				</form>
+				
+				
 			</form>
 		</div>
 	</body>

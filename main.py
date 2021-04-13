@@ -138,21 +138,22 @@ def subir():
     # Output message if something goes wrong...
     msg = ''
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
-    if request.method == 'POST':# and 'titulo' in request.form and 'ruta' in request.form:
-        # Create variables for easy access
-        #titulo = request.form['titulo']
-        print('-------------------------------------->-------------------------------------')
-        ruta = request.files['RUTA']
-        msg = 'Registro Exitoso!'
-        print(ruta)
-        filename = secure_filename(ruta.filename)
-        send_from_directory(os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"]),filename,as_attachment=True,)
-        #ruta.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        print(os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"]))
-        msg = 'Registro Exitoso!'
-    else: 
-      msg = 'ELSE'
-    # Show registration form with message (if any)
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            msg = 'Upload File'
+            
     return render_template('subir.html', msg=msg) 
 
 def allowed_file(filename):
@@ -194,5 +195,5 @@ def logout():
    return redirect('/') 
 
 if __name__ == "__main__":
-       #app.run(debug=True, host='0.0.0.0')   
-       app.run(debug=True) 
+       app.run(debug=True, host='0.0.0.0')   
+       #app.run(debug=True) 
