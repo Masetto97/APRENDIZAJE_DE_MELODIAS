@@ -14,7 +14,7 @@ app.secret_key = 'clave_secreta_flask'
 #Carpeta para subir los archivo antes de guardarlos en la BBDD o procesarlos
 UPLOAD_FOLDER = 'Upload' # /ruta/a/la/carpeta
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'mid', 'midi', 'xml', 'txt', 'pdf'}
 
 #Usuario Actual
 ID_USUARIO_ACTUAL = 0
@@ -33,7 +33,6 @@ def date_now():
     return {
         'now': datetime.utcnow()
     }
-
 
 # Endpoints
 
@@ -65,7 +64,6 @@ def login():
             msg = 'Login incorrecto'
     # Show the login form with message (if any)
     return render_template('login.html', msg=msg)
-
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
@@ -105,11 +103,9 @@ def registro():
     # Show registration form with message (if any)
     return render_template('registro.html', msg=msg)
 
-
 @app.route("/index")
 def index():
     return render_template('index.html')
-
 
 @app.route("/biblioteca")
 def biblioteca():
@@ -132,6 +128,9 @@ def biblioteca():
     msg = os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"])
     return render_template('biblioteca.html',msg=msg) 
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/subir", methods=['GET', 'POST'])
 def subir():
@@ -141,13 +140,13 @@ def subir():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part')
+            msg ='No file part'
             return redirect(request.url)
         file = request.files['file']
         # if user does not select file, browser also
         # submit an empty part without filename
         if file.filename == '':
-            flash('No selected file')
+            msg ='No selected file'
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
@@ -156,44 +155,10 @@ def subir():
             
     return render_template('subir.html', msg=msg) 
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-@app.route('/upload', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return  '''<h1>Upload File</h1>'''
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-    '''
-
-
-
-
 @app.route('/logout')
 def logout():
    return redirect('/') 
 
 if __name__ == "__main__":
        app.run(debug=True, host='0.0.0.0')   
-       #app.run(debug=True) 
+
