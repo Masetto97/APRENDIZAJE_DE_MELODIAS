@@ -135,7 +135,7 @@ def allowed_file(filename):
 @app.route("/subir", methods=['GET', 'POST'])
 def subir():
     # Output message if something goes wrong...
-    msg = ''
+    msg = ID_USUARIO_ACTUAL
     Titulo = ''
     Estilo = ''
 
