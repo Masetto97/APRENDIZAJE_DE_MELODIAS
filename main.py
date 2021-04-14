@@ -162,7 +162,7 @@ def subir():
             cursor = conn.cursor()
 
             
-            cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s, %s)', (Titulo, datetime.now(), 0 , Estilo, ID_USUARIO_ACTUAL))   
+            cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s)', (Titulo, 0 , Estilo, ID_USUARIO_ACTUAL))   
             conn.commit()
             print('cancion añadida a la BBDD')
 
