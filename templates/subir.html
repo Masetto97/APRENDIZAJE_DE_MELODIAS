@@ -14,18 +14,21 @@
 				<label for="name">
 					<i class="fas fa-music"></i>
 				</label>
-				<input type="text" name="TITULO" placeholder="Titulo de la cancion" id="Titulo" required>
+				<input type="text" name="Titulo" placeholder="Titulo de la cancion" id="Titulo" required>
+				</br>
+				<label for="name">
+					<i class="fas fa-star"></i>
+				</label>
+				<select name="estilo">
+					<option>CLASICO</option>       
+				</select>
 				</br>
 				<label for="name">
 					<i class="fas fa-folder-open"></i>
 				</label>
-				<form method=post enctype=multipart/form-data>
-					<input type=file name=file>
-					<div class="msg">{{ msg }}</div>
-					<input type=submit value=Upload>
-				</form>
-				
-				
+				<input type=file name=file>
+				<div class="msg">{{ msg }}</div>
+				<input type=submit value=Upload>
 			</form>
 		</div>
 	</body>

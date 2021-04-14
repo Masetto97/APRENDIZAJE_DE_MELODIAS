@@ -136,23 +136,44 @@ def allowed_file(filename):
 def subir():
     # Output message if something goes wrong...
     msg = ''
+
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
     if request.method == 'POST':
         # check if the post request has the file part
-        if 'file' not in request.files:
-            msg ='No file part'
+        if 'file' not in request.files and 'Titulo' not in request.form and 'estilo' not in request.form:
+            msg ='Rellene todos lso campos'
             return redirect(request.url)
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
+
+        file   = request.files['file']
+        Titulo = request.form['Titulo']
+        Estilo = request.form['estilo']
+
         if file.filename == '':
             msg ='No selected file'
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)))
-            msg = 'Upload File'
-            
+    
+    # connection for MariaDB
+    conn = mariadb.connect(**config)
+    cursor = conn.cursor()
+
+    
+    cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s, %s)', (Titulo, datetime.now(), 0, Estilo, ID_USUARIO_ACTUAL))   
+    conn.commit()
+    print('cancion añadida a la BBDD')
+
+    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, Titulo))
+    # Fetch one record and return result
+    account = cursor.fetchone()
+    if account:
+        ID_Cancion = account[0]
+
+    cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, ID_Cancion))   
+    conn.commit()
+    print('cancion añadida a la BBDD')
+
     return render_template('subir.html', msg=msg) 
 
 @app.route('/logout')
