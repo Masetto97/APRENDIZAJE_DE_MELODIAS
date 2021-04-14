@@ -54,8 +54,8 @@ def login():
         account = cursor.fetchone()
         # If account exists in accounts table in out database
         if account:
-            
-            global ID_USUARIO_ACTUAL = account[0]
+            global ID_USUARIO_ACTUAL
+            ID_USUARIO_ACTUAL = account[0]
             print('EL USUARIO ACTUAL ES: ')
             print (ID_USUARIO_ACTUAL)
             return redirect(url_for('index'))
