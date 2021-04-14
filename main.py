@@ -136,6 +136,8 @@ def allowed_file(filename):
 def subir():
     # Output message if something goes wrong...
     msg = ''
+    Titulo = ''
+    Estilo = ''
 
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
     if request.method == 'POST':
@@ -170,8 +172,8 @@ def subir():
     if account:
         ID_Cancion = account[0]
 
-    cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, ID_Cancion))   
-    conn.commit()
+    #cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, ID_Cancion))   
+    #conn.commit()
     print('cancion añadida a la BBDD')
 
     return render_template('subir.html', msg=msg) 
