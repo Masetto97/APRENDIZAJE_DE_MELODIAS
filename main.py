@@ -166,15 +166,14 @@ def subir():
             conn.commit()
             print('cancion añadida a la BBDD')
 
-            # cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, Titulo))
+            cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, Titulo))
             # Fetch one record and return result
-            # account = cursor.fetchone()
-            # if account:
-               # ID_Cancion = account[0]
-
-            #cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, ID_Cancion))   
-            #conn.commit()
-            # print('cancion añadida a la BBDD')
+            account = cursor.fetchone()
+            if account:
+                ID_Cancion = account[0]
+                cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)), ID_Cancion))   
+                conn.commit()
+                print('cancion añadida a la BBDD')
 
     return render_template('subir.html', msg=msg) 
 
