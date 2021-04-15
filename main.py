@@ -169,6 +169,7 @@ def subir():
                     #ENVIAR LA CANCIÓN POR EL SOCKET
                     s = socket.socket()
                     s.connect(('ia', 5000))
+                    s.send(Titulo)
                     
                     filetosend = open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)), "rb")
                     aux = filetosend.read(1024)
