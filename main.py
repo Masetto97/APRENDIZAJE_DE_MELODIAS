@@ -95,7 +95,7 @@ def registro():
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
             cursor.execute('INSERT INTO USUARIO VALUES (NULL, %s, %s, %s, %s)', (name, username, password, email))
             conn.commit()
-            msg = 'You have successfully registered!'
+            msg = 'Registro completado'
     
     elif request.method == 'POST':
         # Form is empty... (no POST data)
@@ -109,23 +109,7 @@ def index():
 
 @app.route("/biblioteca")
 def biblioteca():
-
-    s = socket.socket()
-    s.connect(('ia', 5000))
-    filetosend = open("./Upload/prueba2.mid", "rb")
-    aux = filetosend.read(1024)
-    while aux:
-        s.send(aux)
-        aux = filetosend.read(1024)
-
-    filetosend.close()
-    s.send('fin'.encode())
-    print("Done Sending.")
-    print(s.recv(1024))
-    s.shutdown(2)
-    s.close()
-
-    msg = os.path.join(os.getcwd(), app.config["UPLOAD_FOLDER"])
+    msg = ''
     return render_template('biblioteca.html',msg=msg) 
 
 def allowed_file(filename):
@@ -135,9 +119,13 @@ def allowed_file(filename):
 @app.route("/subir", methods=['GET', 'POST'])
 def subir():
     # Output message if something goes wrong...
-    msg = ID_USUARIO_ACTUAL
+    msg = ''
     Titulo = ''
     Estilo = ''
+
+    # connection for MariaDB
+    conn = mariadb.connect(**config)
+    cursor = conn.cursor()
 
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
     if request.method == 'POST':
@@ -150,30 +138,53 @@ def subir():
         Titulo = request.form['Titulo']
         Estilo = request.form['estilo']
 
-        if file.filename == '':
-            msg ='No selected file'
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)))
-    
-            # connection for MariaDB
-            conn = mariadb.connect(**config)
-            cursor = conn.cursor()
+        cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL,Titulo))
+        comprobarExistencia = cursor.fetchone()
 
-            
-            cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s)', (Titulo, 0 , Estilo, ID_USUARIO_ACTUAL))   
-            conn.commit()
-            print('cancion añadida a la BBDD')
+        if comprobarExistencia:
+             msg = 'La cancion ya existe!'
+        else:
 
-            cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, Titulo))
-            # Fetch one record and return result
-            account = cursor.fetchone()
-            if account:
-                ID_Cancion = account[0]
-                cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)), ID_Cancion))   
+            if file.filename == '':
+                msg ='No se ha seleccionado un archivo'
+                return redirect(request.url)
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)))    
+                
+                cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s)', (Titulo, 0 , Estilo, ID_USUARIO_ACTUAL))   
                 conn.commit()
                 print('cancion añadida a la BBDD')
+
+                cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, Titulo))
+                # Fetch one record and return result
+                account = cursor.fetchone()
+                if account:
+                    ID_Cancion = account[0]
+                    cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)), ID_Cancion))   
+                    conn.commit()
+                    print('cancion añadida a la BBDD')
+                    
+            
+                    #ENVIAR LA CANCIÓN POR EL SOCKET
+                    s = socket.socket()
+                    s.connect(('ia', 5000))
+                    
+                    filetosend = open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)), "rb")
+                    aux = filetosend.read(1024)
+                    while aux:
+                        s.send(aux)
+                        aux = filetosend.read(1024)
+
+                    filetosend.close()
+                    s.send('fin'.encode())
+                    print("Done Sending.")
+                    print(s.recv(1024))
+
+                    s.shutdown(2)
+                    s.close()
+
+                    msg = 'Cancion subida y enviada a procesar'
 
     return render_template('subir.html', msg=msg) 
 
