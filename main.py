@@ -196,12 +196,35 @@ def subir():
     return render_template('subir.html', msg=msg)
 
 
-@app.route("/procesado", methods=['GET', 'POST'])
-def procesado():
-    print('ARCHIVO RECIBIDO <----------------------------------------------------------------')
+
+def write_file(data, filename):
+    # Convert binary data to proper format and write it on Hard Disk
+    with open(filename, 'wb') as file:
+        file.write(data)
+
+@app.route("/procesado/<Titulo>/<file:archivo>", methods=['GET', 'POST'])
+def procesado(Titulo, archivo):
+
+    # connection for MariaDB
+    conn = mariadb.connect(**config)
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, Titulo))
+    # Fetch one record and return result
+    account = cursor.fetchone()
+    if account:
+        ID_Cancion = account[0]
+
+        #Indicamos que la canción ha sido procesada
+        cursor.execute('UPDATE CANCION SET Procesado=1 where Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, Titulo))
+        conn.commit()
+        procesado = archivo
+        write_file(procesado, Titulo)
+        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (procesado, ID_Cancion))   
+        conn.commit()
+        print('cancion procesada añadida a la BBDD')      
+
     return ''
-
-
 
 @app.route('/logout')
 def logout():
