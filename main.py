@@ -167,7 +167,7 @@ def subir():
                 account = cursor.fetchone()
                 if account:
                     ID_Cancion = account[0]
-                    file = convertToBinaryData(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+                    file = convertToBinaryData(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                     cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, ID_Cancion))   
                     conn.commit()
                     print('cancion añadida a la BBDD')
