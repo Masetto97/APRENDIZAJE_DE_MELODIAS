@@ -197,7 +197,7 @@ def subir():
 
 
 @app.route("/procesado", methods=['GET', 'POST'])
-def procesado(ruta):
+def procesado():
     print('ARCHIVO RECIBIDO <----------------------------------------------------------------')
     return ''
 
