@@ -38,7 +38,7 @@ def date_now():
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
-     # Output message if something goes wrong...
+    # Output message if something goes wrong...
     msg = ''
     # Check if "username" and "password" POST requests exist (user submitted form)
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
@@ -116,6 +116,12 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def convertToBinaryData(filename):
+    # Convert digital data to binary format
+    with open(filename, 'rb') as file:
+        binaryData = file.read()
+    return binaryData
+
 @app.route("/subir", methods=['GET', 'POST'])
 def subir():
     # Output message if something goes wrong...
@@ -161,11 +167,11 @@ def subir():
                 account = cursor.fetchone()
                 if account:
                     ID_Cancion = account[0]
-                    cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)), ID_Cancion))   
+                    file = convertToBinaryData(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+                    cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, ID_Cancion))   
                     conn.commit()
                     print('cancion añadida a la BBDD')
                     
-            
                     #ENVIAR LA CANCIÓN POR EL SOCKET
                     s = socket.socket()
                     s.connect(('ia', 5000))
@@ -187,7 +193,15 @@ def subir():
 
                     msg = 'Cancion subida y enviada a procesar'
 
-    return render_template('subir.html', msg=msg) 
+    return render_template('subir.html', msg=msg)
+
+
+@app.route("/procesado/<path:filename>", methods=['GET', 'POST'])
+def procesado(ruta):
+    print('PROCESADO ENDPOINT REQUESTE <----------------------------------------------------------------')
+    return ''
+
+
 
 @app.route('/logout')
 def logout():
