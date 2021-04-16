@@ -198,7 +198,7 @@ def subir():
 
 @app.route("/procesado/<path:filename>", methods=['GET', 'POST'])
 def procesado(ruta):
-    print('PROCESADO ENDPOINT REQUESTE <----------------------------------------------------------------')
+    print('ARCHIVO RECIBIDO <----------------------------------------------------------------')
     return ''
 
 
