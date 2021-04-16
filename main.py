@@ -196,7 +196,7 @@ def subir():
     return render_template('subir.html', msg=msg)
 
 
-@app.route("/procesado/<path:filename>", methods=['GET', 'POST'])
+@app.route("/procesado", methods=['GET', 'POST'])
 def procesado(ruta):
     print('ARCHIVO RECIBIDO <----------------------------------------------------------------')
     return ''
