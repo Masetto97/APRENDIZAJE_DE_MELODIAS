@@ -202,7 +202,7 @@ def write_file(data, filename):
     with open(filename, 'wb') as file:
         file.write(data)
 
-@app.route("/procesado/<Titulo>/<file:archivo>", methods=['GET', 'POST'])
+@app.route("/procesado/<Titulo>/<archivo>", methods=['GET', 'POST'])
 def procesado(Titulo, archivo):
 
     # connection for MariaDB
