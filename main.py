@@ -206,7 +206,7 @@ def write_file(data, filename):
 def procesado(archivo):
 
     print('dentro del post')
-    Titulo = ''
+    Titulo = 'adgio'
     # connection for MariaDB
     conn = mariadb.connect(**config)
     cursor = conn.cursor()
