@@ -202,7 +202,7 @@ def write_file(data, filename):
     with open(filename, 'wb') as file:
         file.write(data)
 
-@app.route("/procesado/<Titulo>/<archivo>", methods=['GET', 'POST'])
+@app.route("/procesado", methods=['GET', 'POST'])
 def procesado(Titulo, archivo):
 
     print('dentro del post')
