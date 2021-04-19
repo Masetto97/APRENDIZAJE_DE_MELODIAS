@@ -205,6 +205,7 @@ def write_file(data, filename):
 @app.route("/procesado/<Titulo>/<archivo>", methods=['GET', 'POST'])
 def procesado(Titulo, archivo):
 
+    print('dentro del post')
     # connection for MariaDB
     conn = mariadb.connect(**config)
     cursor = conn.cursor()
