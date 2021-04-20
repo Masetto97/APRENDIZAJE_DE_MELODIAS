@@ -221,7 +221,7 @@ def procesado():
     print('RECIBIENDO CANCIÓN PROCESADA')
 
     #Obtengo el fichero
-    archivo = request.files
+    archivo = request.files.to_dict()
 
     # connection for MariaDB
     conn = mariadb.connect(**config)
