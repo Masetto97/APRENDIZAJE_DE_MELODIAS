@@ -135,7 +135,7 @@ def subir():
         msg = ''
         Titulo = ''
         Estilo = ''
-        PUEDO_PROCESAR = 0
+        
 
         # connection for MariaDB
         conn = mariadb.connect(**config)
@@ -201,6 +201,7 @@ def subir():
                         s.close()
 
                         msg = 'Cancion subida y enviada a procesar'
+                        PUEDO_PROCESAR = 0
 
         return render_template('subir.html', msg=msg)
     else:
