@@ -206,6 +206,8 @@ def write_file(data, filename):
 def procesado():
 
     print('dentro del post')
+    file   = request.files['files']
+    print(file)
     return ''
 
 @app.route('/logout')
