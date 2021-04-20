@@ -222,7 +222,11 @@ def procesado():
 
     #Obtengo el fichero
     archivo = request.files.to_dict()
-
+    print('-----------------------------------------------------------------------')
+    print(archivo)
+    print('-----------------------------------------------------------------------')
+    print(archivo[0])
+    print('-----------------------------------------------------------------------')
     # connection for MariaDB
     conn = mariadb.connect(**config)
     cursor = conn.cursor()
