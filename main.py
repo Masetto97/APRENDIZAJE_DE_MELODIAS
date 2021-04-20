@@ -186,7 +186,7 @@ def subir():
                         s.connect(('ia', 5000))
                         s.send(Titulo.encode())
 
-                        filetosend = open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)), "rb")
+                        filetosend = open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)), "r")
                         aux = filetosend.read(1024)
                         while aux:
                             s.send(aux)
