@@ -18,6 +18,8 @@ ALLOWED_EXTENSIONS = {'mid', 'midi', 'xml', 'txt', 'pdf'}
 
 #Usuario Actual
 ID_USUARIO_ACTUAL = 0
+TITULO_PROCESADO = ''
+PUEDO_PROCESAR = 1
 
 # configuration used to connect to MariaDB
 config = {
@@ -124,76 +126,86 @@ def convertToBinaryData(filename):
 
 @app.route("/subir", methods=['GET', 'POST'])
 def subir():
-    # Output message if something goes wrong...
-    msg = ''
-    Titulo = ''
-    Estilo = ''
 
-    # connection for MariaDB
-    conn = mariadb.connect(**config)
-    cursor = conn.cursor()
+    global PUEDO_PROCESAR
+    global TITULO_PROCESADO
 
-    # Check if "username", "password" and "email" POST requests exist (user submitted form)
-    if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files and 'Titulo' not in request.form and 'estilo' not in request.form:
-            msg ='Rellene todos lso campos'
-            return redirect(request.url)
+    if PUEDO_PROCESAR == 1:
+        # Output message if something goes wrong...
+        msg = ''
+        Titulo = ''
+        Estilo = ''
+        PUEDO_PROCESAR = 0
 
-        file   = request.files['file']
-        Titulo = request.form['Titulo']
-        Estilo = request.form['estilo']
+        # connection for MariaDB
+        conn = mariadb.connect(**config)
+        cursor = conn.cursor()
 
-        cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL,Titulo))
-        comprobarExistencia = cursor.fetchone()
-
-        if comprobarExistencia:
-             msg = 'La cancion ya existe!'
-        else:
-
-            if file.filename == '':
-                msg ='No se ha seleccionado un archivo'
+        # Check if "username", "password" and "email" POST requests exist (user submitted form)
+        if request.method == 'POST':
+            # check if the post request has the file part
+            if 'file' not in request.files and 'Titulo' not in request.form and 'estilo' not in request.form:
+                msg ='Rellene todos lso campos'
                 return redirect(request.url)
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)))    
-                
-                cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s)', (Titulo, 0 , Estilo, ID_USUARIO_ACTUAL))   
-                conn.commit()
-                print('cancion añadida a la BBDD')
 
-                cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, Titulo))
-                # Fetch one record and return result
-                account = cursor.fetchone()
-                if account:
-                    ID_Cancion = account[0]
-                    file = convertToBinaryData(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                    cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, ID_Cancion))   
+            file   = request.files['file']
+            Titulo = request.form['Titulo']
+            Estilo = request.form['estilo']
+            TITULO_PROCESADO = Titulo
+
+            cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL,Titulo))
+            comprobarExistencia = cursor.fetchone()
+
+            if comprobarExistencia:
+                msg = 'La cancion ya existe!'
+            else:
+
+                if file.filename == '':
+                    msg ='No se ha seleccionado un archivo'
+                    return redirect(request.url)
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    file.save(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)))    
+                    
+                    cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s)', (Titulo, 0 , Estilo, ID_USUARIO_ACTUAL))   
                     conn.commit()
                     print('cancion añadida a la BBDD')
-                    
-                    #ENVIAR LA CANCIÓN POR EL SOCKET
-                    s = socket.socket()
-                    s.connect(('ia', 5000))
-                    s.send(Titulo.encode())
 
-                    filetosend = open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)), "rb")
-                    aux = filetosend.read(1024)
-                    while aux:
-                        s.send(aux)
+                    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, Titulo))
+                    # Fetch one record and return result
+                    account = cursor.fetchone()
+                    if account:
+                        ID_Cancion = account[0]
+                        file = convertToBinaryData(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, ID_Cancion))   
+                        conn.commit()
+                        print('cancion añadida a la BBDD')
+                        
+                        #ENVIAR LA CANCIÓN POR EL SOCKET
+                        s = socket.socket()
+                        s.connect(('ia', 5000))
+                        s.send(Titulo.encode())
+
+                        filetosend = open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)), "rb")
                         aux = filetosend.read(1024)
+                        while aux:
+                            s.send(aux)
+                            aux = filetosend.read(1024)
 
-                    filetosend.close()
-                    s.send('fin'.encode())
-                    print("Done Sending.")
-                    print(s.recv(1024))
+                        filetosend.close()
+                        s.send('fin'.encode())
+                        print("Done Sending.")
+                        print(s.recv(1024))
 
-                    s.shutdown(2)
-                    s.close()
+                        s.shutdown(2)
+                        s.close()
 
-                    msg = 'Cancion subida y enviada a procesar'
+                        msg = 'Cancion subida y enviada a procesar'
 
-    return render_template('subir.html', msg=msg)
+        return render_template('subir.html', msg=msg)
+    else:
+        msg = 'HAY UN FICHERO PROCESANDOSE, ESPERA A QUE TERMINE ESTA OPERACION'
+        return render_template('biblioteca.html', msg=msg)
 
 
 
@@ -205,12 +217,33 @@ def write_file(data, filename):
 @app.route("/procesado", methods=['GET', 'POST'])
 def procesado():
 
-    print('dentro del post')
-    #file   = request.files['files']
-    print(request.headers)
-    print(request.values)
-    print(request.json)
-    print(request.files)
+    print('RECIBIENDO CANCIÓN PROCESADA')
+
+    #Obtengo el fichero
+    archivo = request.files
+
+    # connection for MariaDB
+    conn = mariadb.connect(**config)
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, TITULO_PROCESADO))
+    # Fetch one record and return result
+    account = cursor.fetchone()
+    if account:
+        ID_Cancion = account[0]
+
+        #Indicamos que la canción ha sido procesada
+        cursor.execute('UPDATE CANCION SET Procesado=1 where Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, TITULO_PROCESADO))
+        conn.commit()
+        procesado = archivo
+        write_file(procesado, TITULO_PROCESADO)
+        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (procesado, ID_Cancion))   
+        conn.commit()
+        print('cancion procesada añadida a la BBDD')      
+
+    print('FIN OPERACIONES CANCION PROCESADA')
+    global PUEDO_PROCESAR
+    PUEDO_PROCESAR = 1
     return ''
 
 @app.route('/logout')
