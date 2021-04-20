@@ -186,7 +186,7 @@ def subir():
                         s.connect(('ia', 5000))
                         s.send(Titulo.encode())
 
-                        filetosend = open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)), "r")
+                        filetosend = open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)), "rb")
                         aux = filetosend.read(1024)
                         while aux:
                             s.send(aux)
@@ -212,7 +212,7 @@ def subir():
 
 def write_file(data, filename):
     # Convert binary data to proper format and write it on Hard Disk
-    with open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)),  'wb') as file:
+    with open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)),  'w') as file:
         file.write(data)
 
 @app.route("/procesado", methods=['GET', 'POST'])
