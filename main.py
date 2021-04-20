@@ -208,6 +208,7 @@ def procesado():
     print('dentro del post')
     #file   = request.files['files']
     print(request.headers)
+    print(request.values)
     return ''
 
 @app.route('/logout')
