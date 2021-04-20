@@ -240,7 +240,7 @@ def procesado():
         #Indicamos que la canción ha sido procesada
         cursor.execute('UPDATE CANCION SET Procesado=1 where Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, TITULO_PROCESADO))
         conn.commit()
-        write_file(archivo, TITULO_PROCESADO)
+        write_file(archivo[0], TITULO_PROCESADO)
         cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (procesado, ID_Cancion))   
         conn.commit()
         print('cancion procesada añadida a la BBDD')      
