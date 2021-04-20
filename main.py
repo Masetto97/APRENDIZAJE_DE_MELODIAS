@@ -210,6 +210,7 @@ def procesado():
     print(request.headers)
     print(request.values)
     print(request.json)
+    print(request.files)
     return ''
 
 @app.route('/logout')
