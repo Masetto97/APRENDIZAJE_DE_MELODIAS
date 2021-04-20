@@ -212,7 +212,7 @@ def subir():
 
 def write_file(data, filename):
     # Convert binary data to proper format and write it on Hard Disk
-    with open(filename, 'wb') as file:
+    with open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)),  'wb') as file:
         file.write(data)
 
 @app.route("/procesado", methods=['GET', 'POST'])
@@ -236,8 +236,7 @@ def procesado():
         #Indicamos que la canción ha sido procesada
         cursor.execute('UPDATE CANCION SET Procesado=1 where Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, TITULO_PROCESADO))
         conn.commit()
-        procesado = archivo
-        write_file(procesado, TITULO_PROCESADO)
+        write_file(archivo, TITULO_PROCESADO)
         cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (procesado, ID_Cancion))   
         conn.commit()
         print('cancion procesada añadida a la BBDD')      
