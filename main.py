@@ -182,7 +182,7 @@ def subir():
                 if file and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)))    
-                    
+
                     cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s)', (Titulo, 0 , Estilo, ID_USUARIO_ACTUAL))   
                     conn.commit()
                     print('cancion añadida a la BBDD')
