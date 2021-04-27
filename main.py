@@ -111,8 +111,16 @@ def index():
 
 @app.route("/biblioteca")
 def biblioteca():
+
+    # connection for MariaDB
+    conn = mariadb.connect(**config)
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s', ID_USUARIO_ACTUAL)
+    result_set = cursor.fetchall()
+
     msg = ''
-    return render_template('biblioteca.html',msg=msg) 
+    return render_template('biblioteca.html',msg=msg, result_set=result_set) 
 
 def allowed_file(filename):
     return '.' in filename and \
