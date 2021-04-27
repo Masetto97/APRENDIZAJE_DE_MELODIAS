@@ -125,7 +125,7 @@ def biblioteca():
     cursor.execute('SELECT Fichero FROM FICHERO WHERE ID = 12')
 
     archivobinario = cursor.fetchone()
-    write_file(archivobinario, 'salidafinal.mid' )
+    write_file(archivobinario[0], 'salidafinal.mid' )
 
     return render_template('biblioteca.html',msg=msg) 
 
