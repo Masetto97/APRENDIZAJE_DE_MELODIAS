@@ -107,8 +107,7 @@ def registro():
 
 @app.route("/index")
 def index():
-    msg = ''
-    return render_template('index.html', msg=msg)
+    return render_template('index.html')
 
 @app.route("/biblioteca")
 def biblioteca():
@@ -117,7 +116,7 @@ def biblioteca():
     conn = mariadb.connect(**config)
     cursor = conn.cursor()
 
-    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s', (ID_USUARIO_ACTUAL))
+    cursor.execute('SELECT * FROM CANCION WHERE Usuario ='+ ID_USUARIO_ACTUAL)
     result_set = cursor.fetchall()
 
     msg = ''
@@ -216,8 +215,8 @@ def subir():
 
         return render_template('subir.html', msg=msg)
     else:
-        msg = 'HAY UN FICHERO PROCESANDOSE, ESPERA A QUE TERMINE ESTA OPERACION'
-        return render_template('index.html', msg=msg)
+        flash('HAY UN FICHERO PROCESANDOSE, ESPERA A QUE TERMINE ESTA OPERACION')
+        return render_template('index.html')
 
 
 
