@@ -1,6 +1,7 @@
 from flask import Flask, flash, redirect, url_for, render_template, request, session,  send_from_directory
 from datetime import datetime
 from werkzeug.utils import secure_filename
+from werkzeug.datastructures import FileStorage
 import json
 import mariadb
 import re
@@ -116,7 +117,7 @@ def biblioteca():
     conn = mariadb.connect(**config)
     cursor = conn.cursor()
 
-    cursor.execute('SELECT * FROM CANCION WHERE Usuario ='+ ID_USUARIO_ACTUAL)
+    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s', (str(ID_USUARIO_ACTUAL)))
     result_set = cursor.fetchall()
 
     msg = ''
@@ -146,7 +147,6 @@ def subir():
         Titulo = ''
         Estilo = ''
         
-
         # connection for MariaDB
         conn = mariadb.connect(**config)
         cursor = conn.cursor()
@@ -155,7 +155,7 @@ def subir():
         if request.method == 'POST':
             # check if the post request has the file part
             if 'file' not in request.files and 'Titulo' not in request.form and 'estilo' not in request.form:
-                msg ='Rellene todos lso campos'
+                msg ='Rellene todos los campos'
                 return redirect(request.url)
 
             file   = request.files['file']
@@ -244,18 +244,22 @@ def procesado():
     account = cursor.fetchone()
     if account:
         ID_Cancion = account[0]
-
         #Indicamos que la canción ha sido procesada
         cursor.execute('UPDATE CANCION SET Procesado=1 where Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, TITULO_PROCESADO))
-        conn.commit()
-        #write_file(archivo, TITULO_PROCESADO)
-        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (archivo, ID_Cancion))   
+        conn.commit()   
+        file = None
+        with open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], TITULO_PROCESADO))  , 'rb') as fp:
+            file = FileStorage(fp)
+        file.save(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], TITULO_PROCESADO)))
+        file = convertToBinaryData(os.path.join(app.config['UPLOAD_FOLDER'], TITULO_PROCESADO))
+        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, ID_Cancion))   
         conn.commit()
         print('cancion procesada añadida a la BBDD')      
 
     print('FIN OPERACIONES CANCION PROCESADA')
     global PUEDO_PROCESAR
     PUEDO_PROCESAR = 1
+    flash('YA SE HA PROCESADO EL ARCHIVO, YA PUEDES VOLVER A CARGAR OTRO')
     return ''
 
 @app.route('/logout')
