@@ -238,8 +238,11 @@ def procesado():
         #Indicamos que la canción ha sido procesada
         cursor.execute('UPDATE CANCION SET Procesado=1 where Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, TITULO_PROCESADO))
         conn.commit()
-        write_file(archivo, TITULO_PROCESADO)
-        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (archivo, ID_Cancion))   
+        #write_file(archivo, TITULO_PROCESADO)
+        filename = secure_filename(archivo.filename)
+        archivo.save(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+        file = convertToBinaryData(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, ID_Cancion))    
         conn.commit()
         print('cancion procesada añadida a la BBDD')      
 
