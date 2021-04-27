@@ -117,7 +117,7 @@ def biblioteca():
     conn = mariadb.connect(**config)
     cursor = conn.cursor()
 
-    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s', (str(ID_USUARIO_ACTUAL)))
+    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s ORDER BY DESC Titulo', (ID_USUARIO_ACTUAL))
     result_set = cursor.fetchall()
 
     msg = ''
@@ -247,13 +247,7 @@ def procesado():
         #Indicamos que la canción ha sido procesada
         cursor.execute('UPDATE CANCION SET Procesado=1 where Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, TITULO_PROCESADO))
         conn.commit()   
-        file = None
-        with open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], TITULO_PROCESADO))  , 'rb') as fp:
-            file = FileStorage(fp)
-        file.save(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], TITULO_PROCESADO)))
-        file = convertToBinaryData(os.path.join(app.config['UPLOAD_FOLDER'], TITULO_PROCESADO))
-        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, ID_Cancion))   
-        conn.commit()
+        
         print('cancion procesada añadida a la BBDD')      
 
     print('FIN OPERACIONES CANCION PROCESADA')
