@@ -109,9 +109,24 @@ def registro():
 def index():
     return render_template('index.html')
 
+
+def write_file(data, filename):
+    # Convert binary data to proper format and write it on Hard Disk
+    with open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)),  'w') as file:
+        file.write(data)
+
 @app.route("/biblioteca")
 def biblioteca():
     msg = ''
+    # connection for MariaDB
+    conn = mariadb.connect(**config)
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = 12')
+
+    archivobinario = cursor.fetchone()
+    write_file(archivobinario, 'salidafinal.mid' )
+
     return render_template('biblioteca.html',msg=msg) 
 
 
@@ -211,10 +226,7 @@ def subir():
 
 
 
-def write_file(data, filename):
-    # Convert binary data to proper format and write it on Hard Disk
-    with open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)),  'w') as file:
-        file.write(data)
+
 
 @app.route("/procesado", methods=['GET', 'POST'])
 def procesado():
@@ -238,7 +250,6 @@ def procesado():
         #Indicamos que la canción ha sido procesada
         cursor.execute('UPDATE CANCION SET Procesado=1 where Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, TITULO_PROCESADO))
         conn.commit()
-        #write_file(archivo, TITULO_PROCESADO)
         filename = secure_filename(archivo.filename)
         archivo.save(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)))
         file = convertToBinaryData(os.path.join(app.config['UPLOAD_FOLDER'], filename))
