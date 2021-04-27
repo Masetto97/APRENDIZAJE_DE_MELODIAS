@@ -1,7 +1,6 @@
 from flask import Flask, flash, redirect, url_for, render_template, request, session,  send_from_directory
 from datetime import datetime
 from werkzeug.utils import secure_filename
-from werkzeug.datastructures import FileStorage
 import json
 import mariadb
 import re
@@ -112,16 +111,8 @@ def index():
 
 @app.route("/biblioteca")
 def biblioteca():
-
-    # connection for MariaDB
-    conn = mariadb.connect(**config)
-    cursor = conn.cursor()
-
-    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s ORDER BY DESC Titulo', (ID_USUARIO_ACTUAL))
-    result_set = cursor.fetchall()
-
     msg = ''
-    return render_template('biblioteca.html',msg=msg, result_set=result_set) 
+    return render_template('biblioteca.html',msg=msg) 
 
 
 
@@ -246,8 +237,10 @@ def procesado():
         ID_Cancion = account[0]
         #Indicamos que la canción ha sido procesada
         cursor.execute('UPDATE CANCION SET Procesado=1 where Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, TITULO_PROCESADO))
-        conn.commit()   
-        
+        conn.commit()
+        write_file(archivo, TITULO_PROCESADO)
+        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (archivo, ID_Cancion))   
+        conn.commit()
         print('cancion procesada añadida a la BBDD')      
 
     print('FIN OPERACIONES CANCION PROCESADA')
