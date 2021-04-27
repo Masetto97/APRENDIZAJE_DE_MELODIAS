@@ -122,7 +122,7 @@ def biblioteca():
     conn = mariadb.connect(**config)
     cursor = conn.cursor()
 
-    cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = 12')
+    cursor.execute('SELECT Fichero FROM FICHERO WHERE ID = 12')
 
     archivobinario = cursor.fetchone()
     write_file(archivobinario, 'salidafinal.mid' )
