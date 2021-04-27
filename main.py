@@ -112,7 +112,7 @@ def index():
 
 def write_file(data, filename):
     # Convert binary data to proper format and write it on Hard Disk
-    with open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)),  'w') as file:
+    with open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)),  'wb') as file:
         file.write(data)
 
 @app.route("/biblioteca")
