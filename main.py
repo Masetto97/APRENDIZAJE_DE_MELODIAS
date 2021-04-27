@@ -107,7 +107,8 @@ def registro():
 
 @app.route("/index")
 def index():
-    return render_template('index.html')
+    msg = ''
+    return render_template('index.html', msg=msg)
 
 @app.route("/biblioteca")
 def biblioteca():
@@ -116,11 +117,13 @@ def biblioteca():
     conn = mariadb.connect(**config)
     cursor = conn.cursor()
 
-    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s', ID_USUARIO_ACTUAL)
+    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s', (ID_USUARIO_ACTUAL))
     result_set = cursor.fetchall()
 
     msg = ''
     return render_template('biblioteca.html',msg=msg, result_set=result_set) 
+
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -214,7 +217,7 @@ def subir():
         return render_template('subir.html', msg=msg)
     else:
         msg = 'HAY UN FICHERO PROCESANDOSE, ESPERA A QUE TERMINE ESTA OPERACION'
-        return render_template('biblioteca.html', msg=msg)
+        return render_template('index.html', msg=msg)
 
 
 
@@ -246,8 +249,8 @@ def procesado():
         #Indicamos que la canción ha sido procesada
         cursor.execute('UPDATE CANCION SET Procesado=1 where Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, TITULO_PROCESADO))
         conn.commit()
-        write_file(archivo, TITULO_PROCESADO)
-        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (procesado, ID_Cancion))   
+        #write_file(archivo, TITULO_PROCESADO)
+        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (archivo, ID_Cancion))   
         conn.commit()
         print('cancion procesada añadida a la BBDD')      
 
