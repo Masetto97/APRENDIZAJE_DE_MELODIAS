@@ -5,35 +5,36 @@ BIBLIOTECA
 {% endblock %}
 {% block content %}
 
-<h1 class="title"> BIBLIOTECA DEL USUARIO </h1>
-<br>
-<table class="table table-hover">
-  <thead class="table-dark">
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">TITULO</th>
-      <th scope="col">PROCESADO</th>
-      <th scope="col">ESTILO</th>
-      <th scope="col">DESCARGAR PROCESADO</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for e in songs %}
-    <tr>
-      <td>{{e[0]}}</td>
-      <td>{{e[1]}}</td>
-      <td>{{e[2]}}</td>
-      <td>{{e[3]}}</td>
-      <td>
-        {% if e[2] ==0%}
-        <input type="submit" class="btn" value="{{e[0]}}" disabled>DESCARGAR</input>
-        {% else %}
-        <input type="submit" class="btn" value="{{e[0]}}">DESCARGAR</input>
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
+<form action="{{ url_for('biblioteca') }}" method="post">
+  <h1 class="title"> BIBLIOTECA DEL USUARIO </h1>
+  <br>
+  <table class="table table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">TITULO</th>
+        <th scope="col">PROCESADO</th>
+        <th scope="col">ESTILO</th>
+        <th scope="col">DESCARGAR PROCESADO</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in songs %}
+      <tr>
+        <td>{{e[0]}}</td>
+        <td>{{e[1]}}</td>
+        <td>{{e[2]}}</td>
+        <td>{{e[3]}}</td>
+        <td>
+          {% if e[2] ==0%}
+          <button type="submit" class="btn" value="{{e[0]}}" disabled>DESCARGAR</button>
+          {% else %}
+          <button type="submit" class="btn" value="{{e[0]}}" onclick="">DESCARGAR</button>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</form>
 {% endblock %}
