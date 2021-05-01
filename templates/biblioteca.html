@@ -14,6 +14,7 @@ BIBLIOTECA
       <th scope="col">TITULO</th>
       <th scope="col">PROCESADO</th>
       <th scope="col">ESTILO</th>
+      <th scope="col">DESCARGAR PROCESADO</th>
     </tr>
   </thead>
   <tbody>
@@ -23,6 +24,9 @@ BIBLIOTECA
       <td>{{e[1]}}</td>
       <td>{{e[2]}}</td>
       <td>{{e[3]}}</td>
+      <td>
+        <button type="button" class="btn btn-default" value="{{e}}">DESCARGAR</button>
+      </td>
     </tr>
     {% endfor %}
   </tbody>
