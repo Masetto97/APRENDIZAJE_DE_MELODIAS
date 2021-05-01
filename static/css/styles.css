@@ -21,36 +21,35 @@ header{
 }
 
 #logotipo{
-    width: 60%;
+    width: 80%;
     height: 140px;
-    margin: 0 auto;
+    /*margin: 0 auto;*/
+    margin-left: 10%;
 
 }
 
 #logotipo img{
     display: block;
-    width: 120px;
+    width: 200px;
     float: left;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: 10px;
+    margin-bottom: 3px;
 }
 
 #logotipo h1{
     display: block;
-    letter-spacing: 3px;
-    padding-top: 60px;
+    letter-spacing: 2px;
+    padding-top: 40px;
     text-transform: uppercase;
     font-weight: normal;
     text-align: center;
-    color: #42a096;
-
+    color: black;
+    margin-left: 40%;
 }
 
 /* ESTILOS DE NAVEGACION */
 
 nav{
-    width: 1250px;
-    height: 40px;
     margin: 0 auto;
     background-color: #1b1e1f;
     border: 1px solid #333333;
@@ -83,10 +82,10 @@ nav ul li a:hover{
     transition: all 300ms ;
 }
 
-.barra{
+/*.barra{
     width: 1250px;
     margin: 0 auto;
-}
+}*/
 
 .esquina-izquierda{
     display: block;
@@ -104,7 +103,7 @@ nav ul li a:hover{
 
 .relleno-barra{
     display: block;
-    width: 1210px;
+   
     height: 10px;
     background: #2b2f30;
     float: left;
@@ -113,21 +112,22 @@ nav ul li a:hover{
 /* estilo contenido central */
 
 #content{
-    width: 1212px;
-    min-height: 930px;
-    margin: 0 auto;
+    /*width: 1212px;*/
+    /*min-height: 930px;*/
+    /*/margin: 0 auto;*/
+    margin-right: 100px;
+    margin-left: 100px;
     margin-bottom: 30px;
-    margin-top: 40px;
+    margin-top: 70px;
+    
 }
 
 .box{
     background: white;
-    width: 95%;
+    /*width: 120%;
     min-height: 930px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 2px;
-    margin: 0 auto;
+    padding: 20px;*/
+    border:0pt;
 }
 
 .title{
@@ -152,6 +152,7 @@ footer{
 
 
 /* ALERTAS */
+
 .message,
 .alert-success,
 .alert{
@@ -163,6 +164,7 @@ footer{
 }
 
 /* BOTONES*/
+
 .btn{
     padding: 10px;
     background: rgb(207, 48, 48);
@@ -185,3 +187,11 @@ p {
     line-height: 150%   /*esta es la propiedad para el interlineado*/ 
 }
 
+
+.card-header {
+    background-image:url("../img/fondologin.png");
+    background-size: cover;
+    border:0;
+    /*background-repeat: no-repeat;
+    height: 100%;*/
+}

@@ -1,70 +1,79 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="utf-8" />
-        <title>{% block title %} | FLASK {% endblock %} | EJEMPLO DEL SISTEMA</title>
-        <link rel='stylesheet' href="{{url_for ('static', filename='css/styles.css')}}">
-    </head>
+
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %} | FLASK {% endblock %}</title>
+    <link rel="stylesheet" href="../static/bootstrap/bootstrap.min.css">
+    <link rel='stylesheet' href="{{url_for ('static', filename='css/styles.css')}}">
+    <script src="../static/bootstrap/jquery-3.5.1.slim.min.js"></script>
+    <script src="../static/bootstrap/bootstrap.bundle.min.js"></script>
+</head>
 
 
-    <body>
+<body>
 
-        <!-- cabecera de la pagina-->
-        <header>
+    <div class="card text-center">
+        <div class="card-header">
             <div id="logotipo">
-                <img src="{{url_for ('static', filename='img/logo.png')}}" />
-                <h1>TFM EDUARDO MORA GONZÁLEZ</h1>
+                <img src="{{url_for ('static', filename='img/icon.gif')}}" />
+                <h1>SISTEMA DE RECONOCIMIENTOS DE MELODIAS</h1>
             </div>
-        </header> 
-
-        <nav>
-            <ul>
-                <li>
-                    <a href="{{url_for ('index')}}">INICIO</a>
-                </li>
-                <li>
-                    <a href="{{url_for ('biblioteca')}}">BIBLIOTECA</a>
-                </li>
-                <li>
-                    <a href="{{url_for ('subir')}}">CARGAR ARCHIVO</a>
-                </li>
-                <li>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </li>
-                <li>
-                    <a href="{{url_for ('logout')}}">CERRAR SESION</a>
-                </li>
-            </ul>
-        </nav>
-        <div class="barra">
-            <span class="esquina-izquierda"></span>
-            <span class="relleno-barra"></span>
-            <span class="esquina-derecha"></span>
         </div>
-        
-        <div id="content">
+        <div class="card-body">
+            <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li>
+                                <a href="{{url_for ('index')}}">INICIO</a>
+                            </li>
+                            <li>
+                                <a href="{{url_for ('biblioteca')}}">BIBLIOTECA</a>
+                            </li>
+                            <li>
+                                <a href="{{url_for ('subir')}}">CARGAR ARCHIVO</a>
+                            </li>
+                            <li>
+                                <a href="{{url_for ('logout')}}">CERRAR SESION</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="barra">
+                <span class="esquina-izquierda"></span>
+                <span class="relleno-barra"></span>
+                <span class="esquina-derecha"></span>
+            </div>
 
-            <div class="box">
-                {% block content %}
+            <div id="content">
+
+                <div class="box" >
+                    {% block content %}
                     <strong>CONTENIDO DEL BLOQUE ORIGINAL</strong>
-                {% endblock %}
+                    {% endblock %}
+                </div>
+
             </div>
-
         </div>
-
-        <footer>
+        <div class="card-footer text-muted">
             EDUARDO MORA GONZÁLEZ | {{now.day}}/{{now.month}}/{{now.year}}
-        </footer>
-        
-    </body>
+            <br>
+            <a style="font-size: 13px;" href="https://github.com/Masetto97/Symbolic-Melody-Identification/blob/master/paper.pdf">ARTÍCULO</a>
+            <a> | </a>
+            <a style="font-size: 13px;" href="https://github.com/Masetto97/Symbolic-Melody-Identification">CÓDIGO FUENTE SISTEMA </a>
+            <a> | </a></a>
+            <a style="font-size: 13px;" href="https://github.com/Masetto97/APRENDIZAJE_DE_MELODIAS">CÓDIGO FUENTE PÁGINA WEB</a>      
+    
+        </div>
+    </div>
+
+</body>
+
 </html>
-
-
-
-
-
