@@ -9,7 +9,8 @@
 
     <div class="songs">{{ songs }}</div>
 
-    <table class="table">
+    <table class="table" ngIf="songs.length != 0">
+      
         <thead class="table-dark">
           <tr>
             <th scope="col">#</th>
@@ -19,7 +20,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <!--<tr>
             <th scope="row">1</th>
             <td>Mark</td>
             <td>Otto</td>
@@ -35,6 +36,12 @@
             <th scope="row">3</th>
             <td colspan="2">Larry the Bird</td>
             <td>@twitter</td>
+          </tr>-->
+          <tr *nfFor="let cancion of songs">
+            <td>{{cancion.id}}</td>
+            <td>{{cancion.titulo}}</td>
+            <td>{{cancion.procesado}}</td>
+            <td>{{cancion.estilo}}</td>
           </tr>
         </tbody>
       </table>
