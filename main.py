@@ -173,8 +173,21 @@ def biblioteca():
 
     songs = cursor.fetchall()
 
-   # archivobinario = cursor.fetchone()
-   # write_file(archivobinario[0], 'salidafinal.mid' )
+    if request.method == 'POST':
+
+        Selected_Song = request.button
+
+        cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = %s', Selected_Song)
+
+        Song_Files = cursor.fetchall()
+
+        cursor.execute('SELECT Titulo FROM CANCION WHERE ID = %s', Selected_Song)
+
+        aux = cursor.fetchall()
+
+        Title = aux[1] + '_procesado.mid'
+        
+        write_file(Song_Files[1], os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], Title)) )
 
     return render_template('biblioteca.html',songs=songs) 
 
@@ -290,7 +303,7 @@ def subir():
     # If there is file being processed
     else:
         # A flash message is sent to the user
-        flash('THERE IS A FILE PROCESSING, WAIT FOR THIS OPERATION TO END')
+        flash('EXISTE UN ARCHIVO PROCESANDO, ESPERE A QUE TERMINE ESTA OPERACIÓN')
         return render_template('index.html')
 
 
@@ -334,7 +347,7 @@ def procesado():
     FLAG_UPLOAD_FILE = 1
 
     # A flash message is sent to the user
-    flash('THE FILE HAS ALREADY BEEN PROCESSED, YOU CAN ALREADY LOAD ANOTHER')
+    flash('EL ARCHIVO YA HA SIDO PROCESADO, YA PUEDE CARGAR OTRO')
 
     return ''
 
