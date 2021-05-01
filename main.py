@@ -173,27 +173,35 @@ def biblioteca():
 
     songs = cursor.fetchall()
 
-    if request.method == 'POST':
-
-        print('ESTOY CON EL POST <--------------------------------------------')
-
-        Selected_Song = request.submit
-
-        cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = %s', Selected_Song)
-
-        Song_Files = cursor.fetchall()
-
-        cursor.execute('SELECT Titulo FROM CANCION WHERE ID = %s', Selected_Song)
-
-        aux = cursor.fetchall()
-
-        Title = aux[1] + '_procesado.mid'
-
-        print(Title)
-        
-        write_file(Song_Files[1], os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], Title)) )
-
     return render_template('biblioteca.html',songs=songs) 
+
+# Endpoint where Download File
+@app.route('/Download')
+def Download():
+
+    # connection for MariaDB
+    conn = mariadb.connect(**config)
+    cursor = conn.cursor()
+
+    print('ESTOY CON EL POST <--------------------------------------------')
+
+    Selected_Song = request.submit
+
+    cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = %s', Selected_Song)
+
+    Song_Files = cursor.fetchall()
+
+    cursor.execute('SELECT Titulo FROM CANCION WHERE ID = %s', Selected_Song)
+
+    aux = cursor.fetchall()
+
+    Title = aux[1] + '_procesado.mid'
+
+    print(Title)
+        
+    write_file(Song_Files[1], os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], Title)) )
+
+    return ''
 
 
 # Endpoint where the file to be processed is uploaded and sent

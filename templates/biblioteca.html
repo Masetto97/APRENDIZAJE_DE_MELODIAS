@@ -29,7 +29,12 @@ BIBLIOTECA
           {% if e[2] ==0%}
           <button type="submit" class="btn" value="{{e[0]}}" disabled>DESCARGAR</button>
           {% else %}
-          <button type="submit" class="btn" value="{{e[0]}}" >DESCARGAR</button>
+          <script>
+            function myFunction() {
+              requests.post('http://web:5000/Download', params=e[0])
+            }
+          </script>
+          <button type="submit" class="btn" value="{{e[0]}}" onclick="myFunction()">DESCARGAR</button>
           {% endif %}
         </td>
       </tr>
