@@ -2,13 +2,13 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>UPLOAD TO THE SYSTEM</title>
+		<title>SUBIR CANCION</title>
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/stylesLogin.css') }}">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
 	</head>
 	<body>
 		<div class="register">
-			<h1>UPLOAD TO THE SYSTEM</h1>
+			<h1>SUBIR AL SISTEMA</h1>
 
 			<form action="{{ url_for('subir') }}" method="post" autocomplete="off"  enctype="multipart/form-data" >
 				<label for="name">
@@ -20,7 +20,7 @@
 					<i class="fas fa-star"></i>
 				</label>
 				<select name="estilo">
-					<option>CLASSIC</option>       
+					<option>CLASICO</option>       
 				</select>
 				</br>
 				<label for="name">
