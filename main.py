@@ -176,7 +176,8 @@ def biblioteca():
     if request.method == 'POST':
 
         print('ESTOY CON EL POST <--------------------------------------------')
-        Selected_Song = request.button
+
+        Selected_Song = request.submit
 
         cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = %s', Selected_Song)
 
