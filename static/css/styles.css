@@ -166,13 +166,9 @@ footer{
 /* BOTONES*/
 
 .btn{
-    padding: 10px;
-    background: rgb(207, 48, 48);
+    background: #1f7e58;
     color: white !important;
     border: 1px solid black;
-    display: block;
-    margin-top: 15px;
-    width: 100px;
     text-align: center;
 }
 
