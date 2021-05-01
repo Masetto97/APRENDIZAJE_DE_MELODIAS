@@ -9,7 +9,7 @@ BIBLIOTECA
 
 <div class="songs">{{ songs }}
 
-  <table class="table" ngIf="songs.length != 0">
+  <table class="table">
 
     <thead class="table-dark">
       <tr>
@@ -37,11 +37,8 @@ BIBLIOTECA
             <td colspan="2">Larry the Bird</td>
             <td>@twitter</td>
           </tr>-->
-      <tr>
-      <td>{{songs[0].id}}</td>
-      <td>{{songs[0].titulo}}</td>
-      <td>{{songs[0].procesado}}</td>
-      <td>{{songs[0].estilo}}</td>
+      <tr *ngFor="let song of songs">
+        <td>{{song.id}}</td>
     </tr>
     </tbody>
   </table>
