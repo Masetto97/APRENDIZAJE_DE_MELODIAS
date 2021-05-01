@@ -176,14 +176,8 @@ def biblioteca():
    # archivobinario = cursor.fetchone()
    # write_file(archivobinario[0], 'salidafinal.mid' )
 
-    songs = { 'songs': {
-       'ID': 2,
-       'Titulo': "asdfas",
-       'Procesado': "asdasd",
-       'Estilo':"asdasd"
-        }
-    }
-
+    songs = { 'songs': [2,"asdfas","asdasd","asdasd"]}
+    
     return render_template('biblioteca.html',songs=songs) 
 
 
