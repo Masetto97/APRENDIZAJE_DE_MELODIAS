@@ -1,27 +1,33 @@
 from flask import Flask, flash, redirect, url_for, render_template, request, session,  send_from_directory
-from datetime import datetime
 from werkzeug.utils import secure_filename
+from datetime import datetime
 import json
 import mariadb
 import re
 import socket, pickle
 import os
 
+# FLASK initial setup
 app = Flask(__name__)
-
 app.secret_key = 'clave_secreta_flask'
 
-#Carpeta para subir los archivo antes de guardarlos en la BBDD o procesarlos
-UPLOAD_FOLDER = 'Upload' # /ruta/a/la/carpeta
+# Folder to upload the files before saving them in the database
+UPLOAD_FOLDER = 'Upload'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-ALLOWED_EXTENSIONS = {'mid', 'midi', 'xml', 'txt', 'pdf'}
 
-#Usuario Actual
-ID_USUARIO_ACTUAL = 0
-TITULO_PROCESADO = ''
-PUEDO_PROCESAR = 1
+# Extensions allowed for uploading files
+ALLOWED_EXTENSIONS = {
+    'mid', 
+    'midi', 
+    'xml'
+}
 
-# configuration used to connect to MariaDB
+# Global variables
+CURRENT_USER_ID = 0
+TITLE_FILE_PROCESSED = ''
+FLAG_UPLOAD_FILE = 1
+
+# Configuration used to connect to MariaDB
 config = {
     'host': 'mariadb',
     'port': 3306,
@@ -30,20 +36,50 @@ config = {
     'database': 'TFM'
 }
 
+#########################################
+########### Utility functions ###########
+#########################################
+
+# Function to convert binary data to proper format and save it to hard drive
+def write_file(data, filename):
+    with open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)),  'wb') as file:
+        file.write(data)
+
+# Function to check that the uploaded file has the allowed Extensions
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Function to convert a data file to binary format
+def convertToBinaryData(filename):
+    with open(filename, 'rb') as file:
+        binaryData = file.read()
+    return binaryData
+
+# Function to get the System date
 @app.context_processor
 def date_now():
     return {
         'now': datetime.utcnow()
     }
 
-# Endpoints
+#########################################
+############### ENDPOINTS ###############
+#########################################
 
+# Endpoint where the login is made to the system
 @app.route('/', methods=['GET', 'POST'])
 def login():
+
     # Output message if something goes wrong...
     msg = ''
+
+    # Declaration of the global variable Current User Id to be able to modify its value
+    global CURRENT_USER_ID
+
     # Check if "username" and "password" POST requests exist (user submitted form)
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+
         # Create variables for easy access
         username = request.form['username']
         password = request.form['password']
@@ -52,106 +88,108 @@ def login():
         conn = mariadb.connect(**config)
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM USUARIO WHERE Usuario = %s AND Password = %s', (username, password))
+
         # Fetch one record and return result
         account = cursor.fetchone()
-        # If account exists in accounts table in out database
+
+        # If account exists in User table in out database
         if account:
-            global ID_USUARIO_ACTUAL
-            ID_USUARIO_ACTUAL = account[0]
-            print('EL USUARIO ACTUAL ES: ')
-            print (ID_USUARIO_ACTUAL)
+            # Get the User Id from the BBDD
+            CURRENT_USER_ID = account[0]
+            #Let's go to the home page
             return redirect(url_for('index'))
+
         else:
             # Account doesnt exist or username/password incorrect
-            msg = 'Login incorrecto'
+            msg = 'Incorrect Login'
+
     # Show the login form with message (if any)
     return render_template('login.html', msg=msg)
 
+
+# Endpoint where to create a new user in the system
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
+
     # Output message if something goes wrong...
     msg = ''
+
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
     if request.method == 'POST' and 'name' in request.form and 'username' in request.form and 'password' in request.form and 'email' in request.form:
+
         # Create variables for easy access
         name = request.form['name']
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
 
-         # Check if account exists using MySQL
+        # Check if account exists using MariaDB
         conn = mariadb.connect(**config)
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM USUARIO WHERE Usuario = %s', (username,))
         account = cursor.fetchone()
+
         # If account exists show error and validation checks
         if account:
-            msg = 'El usuario ya existe!'
+            msg = 'User already exists!'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            msg = 'Direcion de correo invalida!'
+            msg = 'Invalid email address!'
         elif not re.match(r'[A-Za-z0-9]+', username):
-            msg = 'El nombre de usuario debe contener solo caracteres y números!'
+            msg = 'The username must contain only characters and numbers!'
         elif not username or not password or not email:
-            msg = 'Por favor rellena el formulario!'
+            msg = 'Please complete all the fields in the form!'
         else:
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
             cursor.execute('INSERT INTO USUARIO VALUES (NULL, %s, %s, %s, %s)', (name, username, password, email))
             conn.commit()
-            msg = 'Registro completado'
+            msg = 'Registration completed!'
     
     elif request.method == 'POST':
         # Form is empty... (no POST data)
-        msg = 'Por favor rellena el formulario!'
+        msg = 'Please complete all the fields in the form!'
+
     # Show registration form with message (if any)
     return render_template('registro.html', msg=msg)
 
+
+# Endpoint where the main information of the application is displayed
 @app.route("/index")
 def index():
     return render_template('index.html')
 
 
-def write_file(data, filename):
-    # Convert binary data to proper format and write it on Hard Disk
-    with open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)),  'wb') as file:
-        file.write(data)
-
-@app.route("/biblioteca")
+# Endpoint where the files processed by the user are displayed
+@app.route("/biblioteca", methods=['GET', 'POST'])
 def biblioteca():
-    msg = ''
+
+    # Output message if something goes wrong...
+    msg = os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], 'prueba.mid'))
+
     # connection for MariaDB
-    conn = mariadb.connect(**config)
-    cursor = conn.cursor()
+   # conn = mariadb.connect(**config)
+   # cursor = conn.cursor()
 
-    cursor.execute('SELECT Fichero FROM FICHERO WHERE ID = 12')
+    #cursor.execute('SELECT Fichero FROM FICHERO WHERE ID = 12')
 
-    archivobinario = cursor.fetchone()
-    write_file(archivobinario[0], 'salidafinal.mid' )
+   # archivobinario = cursor.fetchone()
+   # write_file(archivobinario[0], 'salidafinal.mid' )
 
     return render_template('biblioteca.html',msg=msg) 
 
 
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def convertToBinaryData(filename):
-    # Convert digital data to binary format
-    with open(filename, 'rb') as file:
-        binaryData = file.read()
-    return binaryData
-
+# Endpoint where the file to be processed is uploaded and sent
 @app.route("/subir", methods=['GET', 'POST'])
 def subir():
 
-    global PUEDO_PROCESAR
-    global TITULO_PROCESADO
+    # Output message if something goes wrong...
+    msg = ''
 
-    if PUEDO_PROCESAR == 1:
-        # Output message if something goes wrong...
-        msg = ''
-        Titulo = ''
-        Estilo = ''
+    # Declaration of the global variables Flag Upload File and Title File Process to be able to modify its values
+    global FLAG_UPLOAD_FILE
+    global TITLE_FILE_PROCESSED
+
+    # If there isn´t file being processed
+    if FLAG_UPLOAD_FILE == 1:
         
         # connection for MariaDB
         conn = mariadb.connect(**config)
@@ -159,114 +197,148 @@ def subir():
 
         # Check if "username", "password" and "email" POST requests exist (user submitted form)
         if request.method == 'POST':
+
             # check if the post request has the file part
             if 'file' not in request.files and 'Titulo' not in request.form and 'estilo' not in request.form:
-                msg ='Rellene todos los campos'
+                msg = 'Please complete all the fields in the form!'
+
                 return redirect(request.url)
 
-            file   = request.files['file']
-            Titulo = request.form['Titulo']
-            Estilo = request.form['estilo']
-            TITULO_PROCESADO = Titulo
+            # Create variables for easy access
+            file       = request.files['file']
+            File_title = request.form['Titulo']
+            Song_style = request.form['estilo']
 
-            cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL,Titulo))
-            comprobarExistencia = cursor.fetchone()
+            # Assign the title to the global variable
+            TITLE_FILE_PROCESSED = File_title
 
-            if comprobarExistencia:
-                msg = 'La cancion ya existe!'
+            # Check if file exists using MariaDB
+            cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (CURRENT_USER_ID,File_title))
+            Check_existence = cursor.fetchone()
+
+            # If the song already exists
+            if Check_existence:
+                msg = 'The file already exists!'
+
+            # If the song doesn't exist
             else:
 
+                # if the path is wrong
                 if file.filename == '':
-                    msg ='No se ha seleccionado un archivo'
+                    msg ='Please complete all the fields in the form!'
                     return redirect(request.url)
+
+                # If the file has a correct format
                 if file and allowed_file(file.filename):
+
+                    # The file is saved in the Upload folder
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)))    
 
-                    cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s)', (Titulo, 0 , Estilo, ID_USUARIO_ACTUAL))   
+                    # The file data is saved in the BBDD
+                    cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s)', (File_title, 0 , Song_style, CURRENT_USER_ID))   
                     conn.commit()
-                    print('cancion añadida a la BBDD')
 
-                    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, Titulo))
-                    # Fetch one record and return result
-                    account = cursor.fetchone()
-                    if account:
-                        ID_Cancion = account[0]
+                    # The ID with which the song was saved is obtained
+                    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (CURRENT_USER_ID, File_title))
+                    Song_ID = cursor.fetchone()
+
+                    # If the song was added correctly
+                    if Song_ID:
+
+                        # The file is converted to binary
                         file = convertToBinaryData(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, ID_Cancion))   
-                        conn.commit()
-                        print('cancion añadida a la BBDD')
-                        
-                        #ENVIAR LA CANCIÓN POR EL SOCKET
-                        s = socket.socket()
-                        s.connect(('ia', 5000))
-                        s.send(Titulo.encode())
 
+                        # The file is added to the BBDD
+                        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, Song_ID[0]))   
+                        conn.commit()
+ 
+                        # The file is sent through a Socket
+                        s = socket.socket()
+                        s.connect(('ia', 5000)) #Socket Configuration
+
+                        # The title is sent
+                        s.send(File_title.encode())
+
+                        # The file is opened and sent
                         filetosend = open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)), "rb")
                         aux = filetosend.read(1024)
+
                         while aux:
                             s.send(aux)
                             aux = filetosend.read(1024)
 
                         filetosend.close()
-                        s.send('fin'.encode())
-                        print("Done Sending.")
-                        print(s.recv(1024))
 
+                        # Final flag is sent
+                        s.send('fin'.encode())
+
+                        # The connection is closed
+                        print(s.recv(1024))
                         s.shutdown(2)
                         s.close()
 
-                        msg = 'Cancion subida y enviada a procesar'
-                        PUEDO_PROCESAR = 0
+                        msg = 'Song uploaded and sent to process!!'
+
+                        # The flag is updated to not allow a new song to be processed
+                        FLAG_UPLOAD_FILE = 0
 
         return render_template('subir.html', msg=msg)
+
+    # If there is file being processed
     else:
-        flash('HAY UN FICHERO PROCESANDOSE, ESPERA A QUE TERMINE ESTA OPERACION')
+        # A flash message is sent to the user
+        flash('THERE IS A FILE PROCESSING, WAIT FOR THIS OPERATION TO END')
         return render_template('index.html')
 
 
-
-
-
+# Endpoint where the processed song is received and saved in the BBDD
 @app.route("/procesado", methods=['GET', 'POST'])
 def procesado():
 
-    print('RECIBIENDO CANCIÓN PROCESADA')
+    # Declaration of the global variables Flag Upload File to be able to modify its value
+    global FLAG_UPLOAD_FILE
 
-    #Obtengo el fichero
-    archivo = request.files['file1']
-    print('-----------------------------------------------------------------------')
-    print(archivo)
-    print('-----------------------------------------------------------------------')
+    #The file is obtained through the Request
+    processed_file = request.files['file1']
+
     # connection for MariaDB
     conn = mariadb.connect(**config)
     cursor = conn.cursor()
 
-    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, TITULO_PROCESADO))
-    # Fetch one record and return result
-    account = cursor.fetchone()
-    if account:
-        ID_Cancion = account[0]
-        #Indicamos que la canción ha sido procesada
-        cursor.execute('UPDATE CANCION SET Procesado=1 where Usuario = %s AND Titulo = %s', (ID_USUARIO_ACTUAL, TITULO_PROCESADO))
+    # The id of the song sent to be processed is obtained
+    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s AND Titulo = %s', (CURRENT_USER_ID, TITLE_FILE_PROCESSED))
+    Song_ID = cursor.fetchone()
+
+    # If the song has ID
+    if Song_ID:
+
+        # It indicates that the song has been processed
+        cursor.execute('UPDATE CANCION SET Procesado=1 where Usuario = %s AND Titulo = %s', (CURRENT_USER_ID, TITLE_FILE_PROCESSED))
         conn.commit()
-        filename = secure_filename(archivo.filename)
-        archivo.save(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+
+        # The file obtained is saved in the Upload folder
+        filename = secure_filename(processed_file.filename)
+        processed_file.save(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)))
+
+        # The file is converted to binary
         file = convertToBinaryData(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, ID_Cancion))    
+        
+        # The file is added to the BBDD
+        cursor.execute('INSERT INTO FICHERO VALUES (NULL, %s, %s)', (file, Song_ID[0]))    
         conn.commit()
-        print('cancion procesada añadida a la BBDD')      
+  
+    # The flag is updated so that a new process is allowed
+    FLAG_UPLOAD_FILE = 1
 
-    print('FIN OPERACIONES CANCION PROCESADA')
-    global PUEDO_PROCESAR
-    PUEDO_PROCESAR = 1
-    flash('YA SE HA PROCESADO EL ARCHIVO, YA PUEDES VOLVER A CARGAR OTRO')
-    return ''
+    # A flash message is sent to the user
+    flash('THE FILE HAS ALREADY BEEN PROCESSED, YOU CAN ALREADY LOAD ANOTHER')
 
+# Endpoint where the session is closed
 @app.route('/logout')
 def logout():
    return redirect('/') 
 
+#APP MAIN
 if __name__ == "__main__":
-       app.run(debug=True, host='0.0.0.0')   
-
+       app.run(debug=True, host='0.0.0.0')

@@ -7,7 +7,15 @@
 
     <h1 class="title"> BIBLIOTECA DEL USUARIO </h1>
 
-    <div class="msg">{{ msg }}</div>
 
-    <div class="result_set">{{ result_set }}</div>
+
+
+
+
+        <script src='http://www.midijs.net/lib/midi.js'></script>
+        <script>MIDIjs.play('https://cdn.jsdelivr.net/gh/cifkao/html-midi-player@2b12128/twinkle_twinkle.mid');</script>
+        <a href="#" onClick="MIDIjs.play('midi/hinematov.mid');">Play hinematov.mid</a>
+        <a href="#" onClick="MIDIjs.stop();">Stop MIDI Playback</a>
+        
+
     {% endblock %}
