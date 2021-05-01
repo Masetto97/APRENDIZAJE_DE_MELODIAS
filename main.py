@@ -334,6 +334,8 @@ def procesado():
     # A flash message is sent to the user
     flash('THE FILE HAS ALREADY BEEN PROCESSED, YOU CAN ALREADY LOAD ANOTHER')
 
+    return ''
+
 # Endpoint where the session is closed
 @app.route('/logout')
 def logout():
