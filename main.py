@@ -175,6 +175,7 @@ def biblioteca():
 
     if request.method == 'POST':
 
+        print('ESTOY CON EL POST <--------------------------------------------')
         Selected_Song = request.button
 
         cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = %s', Selected_Song)
@@ -186,6 +187,8 @@ def biblioteca():
         aux = cursor.fetchall()
 
         Title = aux[1] + '_procesado.mid'
+
+        print(Title)
         
         write_file(Song_Files[1], os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], Title)) )
 
