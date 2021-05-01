@@ -1,15 +1,14 @@
 {% extends 'layaout.html' %}
 
-    {% block title %}
-        BIBLIOTECA
-    {% endblock %}
-    {% block content %}
+{% block title %}
+BIBLIOTECA
+{% endblock %}
+{% block content %}
 
-    <h1 class="title"> BIBLIOTECA DEL USUARIO </h1>
+<h1 class="title"> BIBLIOTECA DEL USUARIO </h1>
 
-    <div class="songs">{{ songs }}</div>
-
-    <input type="button" class="btn btn-warning" id="btn" value="PRUEBA">
+<div class="songs">{{ songs }}</div>
+<!--
 
     <table class="table">
         <thead class="table-dark">
@@ -27,7 +26,7 @@
             <td>Otto</td>
             <td>@mdo</td>
           </tr>
-          <!--<tr>
+        <tr>
             <th scope="row">1</th>
             <td>Mark</td>
             <td>Otto</td>
@@ -43,10 +42,30 @@
             <th scope="row">3</th>
             <td colspan="2">Larry the Bird</td>
             <td>@twitter</td>
-          </tr>-->
+          </tr>
         </tbody>
-      </table>
+      </table>-->
 
 
-      
-    {% endblock %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First</th>
+      <th scope="col">Last</th>
+      <th scope="col">Handle</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in songs %}
+    <tr>
+      <td>{{e.ID}}</td>
+      <td>{{e.Titulo}}</td>
+      <td>{{e.Procesado}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}
