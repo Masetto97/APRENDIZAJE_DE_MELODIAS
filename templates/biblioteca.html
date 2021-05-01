@@ -1,26 +1,33 @@
 {% extends 'layaout.html' %}
 
-{% block title %}
-BIBLIOTECA
-{% endblock %}
-{% block content %}
+    {% block title %}
+        BIBLIOTECA
+    {% endblock %}
+    {% block content %}
 
-<h1 class="title"> BIBLIOTECA DEL USUARIO </h1>
+    <h1 class="title"> BIBLIOTECA DEL USUARIO </h1>
 
-<div class="songs">{{ songs }}
+    <div class="songs">{{ songs }}</div>
 
-  <table class="table">
+    <input type="button" class="btn btn-warning" id="btn" value="PRUEBA">
 
-    <thead class="table-dark">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!--<tr>
+    <table class="table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+          </tr>
+        </thead>
+        <tbody id="tablesongs">
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <!--<tr>
             <th scope="row">1</th>
             <td>Mark</td>
             <td>Otto</td>
@@ -37,13 +44,9 @@ BIBLIOTECA
             <td colspan="2">Larry the Bird</td>
             <td>@twitter</td>
           </tr>-->
-      <tr *ngFor="let song of songs">
-        <td>{{song.id}}</td>
-    </tr>
-    </tbody>
-  </table>
-</div>
+        </tbody>
+      </table>
 
 
-
-{% endblock %}
+      
+    {% endblock %}
