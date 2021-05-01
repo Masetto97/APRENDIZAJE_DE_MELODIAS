@@ -163,18 +163,20 @@ def index():
 def biblioteca():
 
     # Output message if something goes wrong...
-    msg = os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], 'prueba.mid'))
+    # msg = os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], 'prueba.mid'))
 
     # connection for MariaDB
-   # conn = mariadb.connect(**config)
-   # cursor = conn.cursor()
+    conn = mariadb.connect(**config)
+    cursor = conn.cursor()
 
-    #cursor.execute('SELECT Fichero FROM FICHERO WHERE ID = 12')
+    cursor.execute('SELECT ID, Titulo, Procesado, Estilo FROM CANCION WHERE Usuario = %s', (CURRENT_USER_ID))
+
+    songs = cursor.fetchall()
 
    # archivobinario = cursor.fetchone()
    # write_file(archivobinario[0], 'salidafinal.mid' )
 
-    return render_template('biblioteca.html',msg=msg) 
+    return render_template('biblioteca.html',songs=songs) 
 
 
 # Endpoint where the file to be processed is uploaded and sent
