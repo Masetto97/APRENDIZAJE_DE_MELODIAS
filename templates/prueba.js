@@ -1,8 +1,14 @@
-var songs = [
-    [id=2, titulo="prueba", procesado=false, estilo="me da igual"]];
+var songs = [];
 
 var btn = document.querySelector("#btn");
 btn.onclick = function(ev){
+    var song = {
+        id: 2,
+        titulo:"prueba",
+        procesado:false,
+        estilo:"asdasd"
+    }
+    songs.push(song);
     actualizarsongs();
 }
 
