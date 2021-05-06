@@ -5,7 +5,7 @@ BIBLIOTECA
 {% endblock %}
 {% block content %}
 
-
+<form action="{{ url_for('login') }}" method="post">
   <h1 class="title"> BIBLIOTECA DEL USUARIO </h1>
   <br>
   <table class="table table-hover">
@@ -29,17 +29,13 @@ BIBLIOTECA
           {% if e[2] ==0%}
           <button type="submit" class="btn" value="{{e[0]}}" disabled>DESCARGAR</button>
           {% else %}
-          <script>
-            function myFunction() {
-              requests.post('http://web:5000/Download', params=e[0])
-            }
-          </script>
-          <button type="submit" class="btn" value="{{e[0]}}" onclick="myFunction()">DESCARGAR</button>
+          <button type="submit" class="btn" value="{{e[0]}}">DESCARGAR</button>
           {% endif %}
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+</form>
 
 {% endblock %}
