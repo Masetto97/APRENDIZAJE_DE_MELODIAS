@@ -179,11 +179,11 @@ def biblioteca():
 
         cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = %s' % Selected_Song)
 
-        Song_Files = cursor.fetchall()
+        Song_Files = cursor.fetchone()
 
         cursor.execute('SELECT Titulo FROM CANCION WHERE ID = %s AND Usuario = %s ', (Selected_Song, CURRENT_USER_ID))
 
-        aux = cursor.fetchall()
+        aux = cursor.fetchone()
 
         Title = str(aux[0])
 
@@ -193,10 +193,10 @@ def biblioteca():
         print(Final_Title)
 
 
-        print(str(Song_Files[1]))
+        print(str(Song_Files[0]))
 
             
-        write_file(str(Song_Files[1]), os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], Final_Title)) )
+        write_file(Song_Files[0], os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], Final_Title)) )
 
         return render_template('biblioteca.html',songs=songs) 
 
