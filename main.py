@@ -178,6 +178,8 @@ def biblioteca():
         
         Selected_Song = request.form['submit_button']
 
+        processed = False
+
         if Selected_Song[0:1] == 'p':
 
             processed = True
