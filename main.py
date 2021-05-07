@@ -187,7 +187,7 @@ def biblioteca():
 
         aux = cursor.fetchall()
 
-        Title = aux[0] + '_procesado.mid'
+        Title = str(aux[0]) + '_procesado.mid'
 
         print(Title)
             
