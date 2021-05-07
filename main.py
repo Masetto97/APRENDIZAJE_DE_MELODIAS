@@ -178,17 +178,28 @@ def biblioteca():
         
         Selected_Song = request.form['submit_button']
 
+        if Selected_Song[0:1] == 'p':
+
+            processed = True
+
+
         cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = %s' % Selected_Song)
 
         Song_Files = cursor.fetchone()
+
+        if processed:
+
+          Song_Files = cursor.fetchone()          
 
         cursor.execute('SELECT Titulo FROM CANCION WHERE ID = %s AND Usuario = %s ', (Selected_Song, CURRENT_USER_ID))
 
         aux = cursor.fetchone()
 
-        Title = str(aux[0])
+        Final_Title = aux[0]
 
-        Final_Title = Title + '_procesado.mid'
+        if processed:
+            
+            Final_Title = aux[0] + '_procesado.mid'
             
         write_file(Song_Files[0], os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], Final_Title)) )
 
