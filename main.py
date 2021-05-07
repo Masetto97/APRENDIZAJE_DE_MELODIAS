@@ -177,8 +177,6 @@ def biblioteca():
         
         Selected_Song = request.form['submit_button']
 
-        print(Selected_Song)
-
         cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = %s' % Selected_Song)
 
         Song_Files = cursor.fetchall()
@@ -187,11 +185,18 @@ def biblioteca():
 
         aux = cursor.fetchall()
 
-        Title = str(aux[0]) + '_procesado.mid'
+        Title = aux[0] 
 
-        print(Title)
+        Final_Title = Title + '_procesado.mid'
+
+
+        print(Final_Title)
+
+        
+        print(str(Song_Files[1]))
+
             
-        write_file(Song_Files[1], os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], Title)) )
+        write_file(str(Song_Files[1]), os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], Final_Title)) )
 
         return render_template('biblioteca.html',songs=songs) 
 
