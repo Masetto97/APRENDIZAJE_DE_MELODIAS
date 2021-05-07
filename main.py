@@ -184,6 +184,8 @@ def biblioteca():
 
             processed = True
 
+            Selected_Song = Selected_Song[1:]
+
 
         cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = %s' % Selected_Song)
 
@@ -197,7 +199,7 @@ def biblioteca():
 
         aux = cursor.fetchone()
 
-        Final_Title = aux[0]
+        Final_Title = aux[0] + '.mid'
 
         if processed:
             
