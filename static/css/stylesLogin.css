@@ -181,22 +181,15 @@ body.loggedin {
   padding: 5px;
   margin: 0 0 10px 0;
 }
-
-.botonsubir{
-    width: 310px;
-    height: 50px;
-    border: 1px solid #dee0e4;
-    margin-bottom: 20px;
-    padding: 0 16px;
-    background-color: white;
-}
-
-.inputfile {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
-	cursor: pointer;
-}
+#fichero{
+    display: none;
+  }
+  
+  .circle{
+    display: inline-block;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    cursor: pointer;
+  }
