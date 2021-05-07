@@ -185,14 +185,14 @@ def biblioteca():
 
         aux = cursor.fetchall()
 
-        Title = aux[0] 
+        Title = str(aux[0])
 
         Final_Title = Title + '_procesado.mid'
 
 
         print(Final_Title)
 
-        
+
         print(str(Song_Files[1]))
 
             
