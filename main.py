@@ -179,11 +179,11 @@ def biblioteca():
 
         print(Selected_Song)
 
-        cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = %s', Selected_Song)
+        cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = %s', str(Selected_Song))
 
         Song_Files = cursor.fetchall()
 
-        cursor.execute('SELECT Titulo FROM CANCION WHERE ID = %s', Selected_Song)
+        cursor.execute('SELECT Titulo FROM CANCION WHERE ID = %s AND Usuario = %s ', (Selected_Song, CURRENT_USER_ID))
 
         aux = cursor.fetchall()
 
@@ -229,7 +229,6 @@ def subir():
             # Create variables for easy access
             file       = request.files['file']
             File_title = request.form['Titulo']
-            Song_style = request.form['estilo']
 
             # Assign the title to the global variable
             TITLE_FILE_PROCESSED = File_title
@@ -258,7 +257,7 @@ def subir():
                     file.save(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)))    
 
                     # The file data is saved in the BBDD
-                    cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s)', (File_title, 0 , Song_style, CURRENT_USER_ID))   
+                    cursor.execute('INSERT INTO CANCION VALUES (NULL, %s, %s, %s, %s)', (File_title, 0 , "CLASICO", CURRENT_USER_ID))   
                     conn.commit()
 
                     # The ID with which the song was saved is obtained
