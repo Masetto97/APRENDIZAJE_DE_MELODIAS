@@ -179,7 +179,7 @@ def biblioteca():
 
         print(Selected_Song)
 
-        cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = %s', str(Selected_Song))
+        cursor.execute('SELECT Fichero FROM FICHERO WHERE Cancion = %s' % Selected_Song)
 
         Song_Files = cursor.fetchall()
 
