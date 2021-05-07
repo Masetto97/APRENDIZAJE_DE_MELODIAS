@@ -193,6 +193,8 @@ def biblioteca():
             
         write_file(Song_Files[1], os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], Title)) )
 
+        return render_template('biblioteca.html',songs=songs) 
+
 
     return render_template('biblioteca.html',songs=songs) 
 
