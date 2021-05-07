@@ -188,17 +188,14 @@ def biblioteca():
         Title = str(aux[0])
 
         Final_Title = Title + '_procesado.mid'
-
-
-        print(Final_Title)
-
-
-        print(str(Song_Files[0]))
-
             
         write_file(Song_Files[0], os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], Final_Title)) )
 
-        return render_template('biblioteca.html',songs=songs) 
+        #return render_template('biblioteca.html',songs=songs)
+
+        uploads = os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'])
+
+        return send_from_directory(directory=uploads, filename=Final_Title)
 
 
     return render_template('biblioteca.html',songs=songs) 
