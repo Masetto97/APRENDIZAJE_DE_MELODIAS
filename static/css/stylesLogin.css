@@ -181,15 +181,3 @@ body.loggedin {
   padding: 5px;
   margin: 0 0 10px 0;
 }
-#fichero{
-    display: none;
-  }
-  
-  .circle{
-    display: inline-block;
-    border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    background-color: red;
-    cursor: pointer;
-  }
