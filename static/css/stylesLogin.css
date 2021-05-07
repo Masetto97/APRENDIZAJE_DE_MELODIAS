@@ -181,3 +181,12 @@ body.loggedin {
   padding: 5px;
   margin: 0 0 10px 0;
 }
+
+.botonsubir{
+    width: 310px;
+    height: 50px;
+    border: 1px solid #dee0e4;
+    margin-bottom: 20px;
+    padding: 0 16px;
+    background-color: white;
+}
