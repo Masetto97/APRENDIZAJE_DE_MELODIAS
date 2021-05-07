@@ -169,7 +169,7 @@ def biblioteca():
     conn = mariadb.connect(**config)
     cursor = conn.cursor()
 
-    cursor.execute('SELECT * FROM CANCION')
+    cursor.execute('SELECT * FROM CANCION WHERE Usuario = %s ' % CURRENT_USER_ID)
 
     songs = cursor.fetchall()
 
@@ -187,7 +187,7 @@ def biblioteca():
 
         aux = cursor.fetchall()
 
-        Title = aux[1] + '_procesado.mid'
+        Title = aux[1]
 
         print(Title)
             
