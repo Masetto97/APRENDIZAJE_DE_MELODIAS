@@ -190,3 +190,13 @@ body.loggedin {
     padding: 0 16px;
     background-color: white;
 }
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+	cursor: pointer;
+}
