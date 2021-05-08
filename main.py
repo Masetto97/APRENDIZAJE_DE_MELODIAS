@@ -142,7 +142,7 @@ def registro():
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
             cursor.execute('INSERT INTO USUARIO VALUES (NULL, %s, %s, %s, %s)', (name, username, password, email))
             conn.commit()
-            msg = 'Registration completed!'
+            msg = '¡Registro Finalizado con Existo!'
     
     elif request.method == 'POST':
         # Form is empty... (no POST data)
@@ -240,7 +240,7 @@ def subir():
 
             # check if the post request has the file part
             if 'file' not in request.files and 'Titulo' not in request.form and 'estilo' not in request.form:
-                msg = 'Please complete all the fields in the form!'
+                msg = '¡ Por favor complete todos los campos del formulario !'
 
                 return redirect(request.url)
 
