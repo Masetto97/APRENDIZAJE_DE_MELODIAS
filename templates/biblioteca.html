@@ -17,7 +17,6 @@ BIBLIOTECA
         <th scope="col">ESTILO</th>
         <th scope="col">DESCARGAR ORIGINAL</th>
         <th scope="col">DESCARGAR PROCESADO</th>
-        <th scope="col">REPRODUCIR</th>
       </tr>
     </thead>
     <tbody>
@@ -42,9 +41,6 @@ BIBLIOTECA
           {% else %}
           <button type="submit" class='btn' name="submit_button" value="p{{e[0]}}"> DESCARGAR</button>
           {% endif %}
-        </td>
-        <td>
-          <a href="#" onClick="MIDIjs.play('midi/hinematov.mid');">Play hinematov.mid</a>
         </td>
       </tr>
       {% endfor %}
