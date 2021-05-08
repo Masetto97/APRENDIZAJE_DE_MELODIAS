@@ -101,7 +101,7 @@ def login():
 
         else:
             # Account doesnt exist or username/password incorrect
-            msg = 'Incorrect Login'
+            msg = 'Login Incorrecto'
 
     # Show the login form with message (if any)
     return render_template('login.html', msg=msg)
@@ -131,13 +131,13 @@ def registro():
 
         # If account exists show error and validation checks
         if account:
-            msg = 'User already exists!'
+            msg = '¡El usuario ya existe!'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            msg = 'Invalid email address!'
+            msg = '¡Dirección de correo electrónico inválida!'
         elif not re.match(r'[A-Za-z0-9]+', username):
-            msg = 'The username must contain only characters and numbers!'
+            msg = '¡El nombre de usuario debe contener solo caracteres y números!'
         elif not username or not password or not email:
-            msg = 'Please complete all the fields in the form!'
+            msg = '¡Por favor complete todos los campos del formulario!'
         else:
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
             cursor.execute('INSERT INTO USUARIO VALUES (NULL, %s, %s, %s, %s)', (name, username, password, email))
@@ -146,7 +146,7 @@ def registro():
     
     elif request.method == 'POST':
         # Form is empty... (no POST data)
-        msg = 'Please complete all the fields in the form!'
+        msg = '¡Por favor complete todos los campos del formulario!'
 
     # Show registration form with message (if any)
     return render_template('registro.html', msg=msg)
@@ -211,7 +211,7 @@ def biblioteca():
 
         uploads = os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'])
 
-        return send_from_directory(directory=uploads, filename=Final_Title)
+        return send_from_directory(directory=uploads, filename=Final_Title, attachment_filename=Final_Title)
 
 
     return render_template('biblioteca.html',songs=songs) 
@@ -257,14 +257,14 @@ def subir():
 
             # If the song already exists
             if Check_existence:
-                msg = 'The file already exists!'
+                msg = '¡El archivo ya existe!'
 
             # If the song doesn't exist
             else:
 
                 # if the path is wrong
                 if file.filename == '':
-                    msg ='Please complete all the fields in the form!'
+                    msg ='¡ Por favor complete todos los campos del formulario !'
                     return redirect(request.url)
 
                 # If the file has a correct format
@@ -317,7 +317,7 @@ def subir():
                         s.shutdown(2)
                         s.close()
 
-                        msg = 'Song uploaded and sent to process!!'
+                        msg = '¡ Canción cargada y enviada a procesar !'
 
                         # The flag is updated to not allow a new song to be processed
                         FLAG_UPLOAD_FILE = 0
