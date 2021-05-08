@@ -211,7 +211,7 @@ def biblioteca():
 
         uploads = os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'])
 
-        return send_from_directory(directory=uploads, filename=Final_Title, attachment_filename=Final_Title)
+        return send_from_directory(directory=uploads, filename=Final_Title, as_attachment=True)
 
 
     return render_template('biblioteca.html',songs=songs) 
@@ -297,7 +297,7 @@ def subir():
                         s.connect(('ia', 5000)) #Socket Configuration
 
                         # The title is sent
-                        s.send(File_title.encode())
+                        # s.send(File_title.encode())
 
                         # The file is opened and sent
                         filetosend = open(os.path.join(os.getcwd(),os.path.join(app.config['UPLOAD_FOLDER'], filename)), "rb")
