@@ -92,7 +92,7 @@ body {
     color: #ffffff;
 }
 
- .register form button {
+ .subir form label {
     display: flex;
     justify-content: center;
     align-items: center;
