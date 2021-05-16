@@ -11,7 +11,7 @@
 			<img src="{{url_for ('static', filename='img/escudo.png')}}" width="50%" height="50%"/>
 		</br>
 		</br>
-			<h1>SUBIDA DE ARCHIVOS PARA PROCESAR CON LA INTELIGENCIA ARTIFICAL</h1>
+			<h1>SUBIDA DE ARCHIVOS PARA PROCESAR CON LA RED NEURONAL</h1>
 		</div>
 		<div class="register">
 			<h1>SUBIR AL SISTEMA</h1>
@@ -21,17 +21,11 @@
 				</label>
 				<input type="text" name="Titulo" placeholder="Titulo de la cancion" id="Titulo" required>
 				</br>
-				<!--<label for="name">
-					<i class="fas fa-star"></i>
-				</label>
-				<select name="estilo">
-					<option>CLASICO</option>       
-				</select>
-				</br>-->
 				<label for="name">
 					<i class="fas fa-folder-open"></i>
 				</label>
-				<input type="file" name="file">
+				<input type="file" name="file" id="file" hidden>
+				<label type="submit" for="file">Selecciona un Fichero</label>
 				<div class="msg">{{ msg }}</div>
 				<input type=submit value=ENVIAR>
 				<input type="submit" onclick="history.back()" value="VOLVER">

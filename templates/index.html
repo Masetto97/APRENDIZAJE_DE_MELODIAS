@@ -19,17 +19,19 @@
         <h1 class="title"> INICIO  </h1>
         <br>
         <p>
-            Muchas tradiciones musicales en la música de arte occidental hacen uso de estructuras de acompañamiento melódico. 
-            Distinguiendo la línea de la melodía tiene el significado más significativo y el acompañamiento que proporciona un apoyo armónico y rítmico.
-            En este <a href="https://github.com/Masetto97/Symbolic-Melody-Identification/blob/master/paper.pdf">artículo</a> e propone un enfoque convolucional 
-            para identificar la línea melódica de una pieza utilizando una representación de pianola de la partitura y haciendo uso de una de las formas de definir las voces de Cambouropoulos.
+            Está claro que la aparición y desarrollo de las Tecnologías de la Información y Comunicación en los últimos tiempos ha revolucionado la manera en la que percibimos e interactuamos con el mundo. 
+            La música tampoco se ha quedado atrás en el uso de estas nuevas tecnologías y actualmente se ha lanzado diversas líneas de investigación para analizar y comprender este arte. 
+            La presente investigación supone un estudio en una de estas investigaciones.
             <br><br>
-            El esquema del sistema es el siguiente:
+            En el artículo "A Convolutional Approach To Melody Line Identification In Symbolic Scores" se propone una Red Neuronal que, tras ser entrenada, permite separar la línea melódica del acompañamiento.
+            El esquema de dicha Red Neuronal es la siguiente:
             <br>
         </p>
         <div align="center">
             <img src="{{url_for ('static', filename='img/diagrama.png')}}"  width="100%" height="100%"/>
         </div>
         <br><br>
+
+        Una vez estudiada y probada dicha Red Neuronal, se ha creado esta Aplicación Web para poder explotarla.
        
     {% endblock %}
