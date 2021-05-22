@@ -93,13 +93,13 @@ body {
 }
 
 #prueba {
-    width: 310px;
-    height: 50px;
-    border: 1px solid #dee0e4;
-    margin-bottom: 20px;
-    padding: 0 15px;
-    background-color: #dee0e4;
-    color: #ffffff;
+    width: 310px!important;
+    height: 50px!important;
+    border: 1px solid #dee0e4!important;
+    margin-bottom: 20px!important;
+    padding: 0 15px!important;
+    background-color: #dee0e4!important;
+    color: #ffffff!important;
 }
 
 .login form input[type="password"], .login form input[type="text"], .login form input[type="email"], .register form input[type="password"], .register form input[type="text"], .register form input[type="email"] {
