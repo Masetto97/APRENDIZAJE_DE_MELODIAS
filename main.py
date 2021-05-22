@@ -142,7 +142,7 @@ def registro():
             # Account doesnt exists and the form data is valid, now insert new account into accounts table
             cursor.execute('INSERT INTO USUARIO VALUES (NULL, %s, %s, %s, %s)', (name, username, password, email))
             conn.commit()
-            msg = '¡Registro Finalizado con Existo!'
+            msg = '¡Registro Finalizado con Éxito!'
     
     elif request.method == 'POST':
         # Form is empty... (no POST data)
